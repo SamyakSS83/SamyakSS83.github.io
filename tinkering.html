@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tinkering</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@400;500&display=swap">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 1rem;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #ecf0f1;
+            font-weight: 600;
+            font-family: 'Roboto Mono', monospace;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .project-card {
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        .project-card p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: #7f8c8d;
+        }
+        .project-link {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #1abc9c;
+            padding: 0.7rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .project-link:hover {
+            background-color: #16a085;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="hello.html">Home</a></li>
+            <li><a href="tinkering.html">Tinkering</a></li>
+            <li><a href="blog.html">For the Plot</a></li>
+        </ul>
+    </nav>
+
+    <div class="projects-grid">
+        <div class="project-card">
+            <h3>Transformer from Scratch</h3>
+            <p>Built a transformer architecture from ground up using PyTorch, focusing on the MLP and Backprogation components. Tried Implementing and recreating <a href="https://arxiv.org/abs/1706.03762" target="_blank">Attention is all you need</a> paper.</p>
+            <a href="https://github.com/SamyakSS83/transformer_pytorch" class="project-link">View on GitHub</a>
+        </div>
+
+        <div class="project-card">
+            <h3>BERT Book Genre Predictor</h3>
+            <p>Fine-tuned BERT model to predict book genres based on their titles. The project showcases practical application of transfer learning and text classification using transformer models.</p>
+            <a href="https://github.com/SamyakSS83/genre-predictor/tree/main" class="project-link">View on GitHub</a>
+        </div>
+
+        <div class="project-card">
+            <h3>PDF Chat Bot using RAG</h3>
+            <p>Developed a RAG-based pipeline allowing LLMs to interact with large databases. The PDF chatbot component enables direct questioning and information retrieval from PDF documents using LLaMA model.</p>
+            <a href="https://github.com/SamyakSS83/PDF-questioning-llama" class="project-link">View on GitHub</a>
+        </div>
+    </div>
+</body>
+</html>

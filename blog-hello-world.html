@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World! - Blog Post</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f1de;
+            color: #3d405b;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        nav {
+            background: #3d405b;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: #f4f1de;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #81b29a;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .blog-post {
+            background: #fff;
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .blog-post h1 {
+            color: #e07a5f;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .post-meta {
+            color: #81b29a;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #3d405b;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #81b29a;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #3d405b;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .blog-post {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <!-- <li><a href="index.html">Home</a></li> -->
+            <li><a href="hello.html">Home</a></li>
+            <li><a href="tinkering.html">Tinkering</a></li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <a href="blog.html" class="back-link">← Back to blog</a>
+        
+        <article class="blog-post">
+            <h1>Hello World!</h1>
+            <div class="post-meta">January 10, 2025</div>
+            <div class="post-content">
+                <p>I thought that formal advertising myself apparently makes a lot of sense, so here goes nothing...</p>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
