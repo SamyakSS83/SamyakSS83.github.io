@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All You Need to Know to Make Conversation with an AI Scientist - Blog Post</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f1de;
+            color: #3d405b;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        nav {
+            background: #3d405b;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+        nav a {
+            color: #f4f1de;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #81b29a;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .blog-post {
+            background: #fff;
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .blog-post h1 {
+            color: #e07a5f;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        .blog-post h2 {
+            color: #e07a5f;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        .post-meta {
+            color: #81b29a;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #3d405b;
+        }
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #81b29a;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .back-link:hover {
+            color: #3d405b;
+        }
+        .equation {
+            text-align: center;
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .blog-post {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tinkering.html">Tinkering</a></li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <a href="blog.html" class="back-link">← Back to blog</a>
+        
+        <article class="blog-post">
+            <h1>All You Need to Know to Make Conversation with an AI Scientist</h1>
+            <div class="post-meta">February 21, 2025</div>
+            <div class="post-content">
+                <p>AI this, AI that — we have been hearing a lot of AI happening, but what is the core mathematics and rationale that runs and powers this boom? In this post, I will be covering some basics of what makes AI tick and discuss the basic and fundamental architectures that are the building blocks of this AI boom.</p>
+                
+                <p>Alright, on to the main topic. This post presumes some basics in concepts like probability and basic mathematical intuition.</p>
+                
+                <p>What machine learning and Artificial Intelligence tries to do is to write some sort of mathematical equation and then estimate or predict an output for corresponding input parameters. Bluntly, it is a very large and modified prediction problem, that's it!</p>
+                
+                <h2>1. The Basics: Linear Regression (A Fancy Best Fit Line)</h2>
+                
+                <p>If you have been to a physics lab in your 12th grade or college, you will have made a best fit line for some experiment. Congratulations, you have already implemented Linear Regression!</p>
+                
+                <p>A linear regression presumes that your target is a linear function of the input parameters with the equation looking like:</p>
+                
+                <div class="equation">Y = a₁x₁ + a₂x₂ + ... + aₙxₙ + b</div>
+                
+                <p>A fancy way to write this would be using matrices as:</p>
+                
+                <div class="equation">Y = W<sup>T</sup>X + b</div>
+                
+                <p> W is a weight vector [a₁, a₂, ..., aₙ]<sup>T</sup>  
+                    <br>X is the input feature vector [x₁, x₂, ..., xₙ]<sup>T</sup>. <br>This is the most simple modeling approach.</p>
+                
+                <h2>2. The Classifiers: Logistic Regression, Naive Bayes, SVMs, Decision Trees</h2>
+                
+                
+                <h2>3. Onset of Complexity: Neural Networks</h2>
+                
+                
+                <h2>4. Context-based NNs: RNNs, GRUs, LSTMs</h2>
+                
+                
+                <h2>5. Daddy of ChatGPT: The Transformer</h2>
+                
+            </div>
+        </article>
+    </div>
+</body>
+</html>
