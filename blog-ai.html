@@ -38,7 +38,7 @@
             color: #81b29a;
         }
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -100,6 +100,9 @@
             }
         }
     </style>
+    <!-- Add MathJax script -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
     <nav>
@@ -128,26 +131,67 @@
                 
                 <p>A linear regression presumes that your target is a linear function of the input parameters with the equation looking like:</p>
                 
-                <div class="equation">Y = a₁x₁ + a₂x₂ + ... + aₙxₙ + b</div>
+                <div class="equation">\[ y = a_1 x_1 + a_2 x_2 + \dots + a_n x_n + b \]</div>
                 
                 <p>A fancy way to write this would be using matrices as:</p>
                 
-                <div class="equation">Y = W<sup>T</sup>X + b</div>
+                <div class="equation">\[ y = W^T X + b \]</div>
                 
-                <p> W is a weight vector [a₁, a₂, ..., aₙ]<sup>T</sup>  
-                    <br>X is the input feature vector [x₁, x₂, ..., xₙ]<sup>T</sup>. <br>This is the most simple modeling approach.</p>
+                <p>where W is a weight vector [a₁, a₂, ..., aₙ]<sup>T</sup> and X is the input feature vector [x₁, x₂, ..., xₙ]<sup>T</sup>. This is the most simple modeling approach.</p>
                 
-                <h2>2. The Classifiers: Logistic Regression, Naive Bayes, SVMs, Decision Trees</h2>
+                <h2>2. The Classifiers: Logistic Regression, Naive Bayes, SVMs</h2>
                 
+                <h3 style="color: #81b29a; margin-top: 1rem; margin-bottom: 0.8rem; font-size: 1.4rem;">• Logistic Regression</h3>
+                <p>Consider the diagram below for the sigmoid function:</p>
                 
+                <div class="equation">\[ y = \frac{1}{1 + e^{-z}} \]</div>
+                
+                <p>You can see that for extreme values of z, y goes to 0 or 1. <br>
+
+                    <img src="sigmoid.png" alt="Sigmoid Function" style="display: block; margin: 1.5rem auto; max-width: 100%; height: auto;"></p>
+                   <p> Congratulations! You have now created a continuous differentiable function (yes that is of importance, especially in backpropagation in complex systems) which acts like an "IF-ELSE"! 
+                    <p>In general, one parameter is not enough, so we do a linear regression on z, thus making the general equation as:</p>
+                
+                <div class="equation">\[ y = \frac{1}{1 + e^{-(W^T X + b)}} \]</div>
+                
+                <h3 style="color: #81b29a; margin-top: 1rem; margin-bottom: 0.8rem; font-size: 1.4rem;">• Naive Bayes</h3>
+                <p>Unlike other algorithms, Naive Bayes presumes all events to be statistically probabilistic and can be modelled using Bayesian probability (i.e., follows Bayes' rule).</p>
+                
+                <div class="equation">\[ P(A \mid B) = \frac{P(B \mid A)\times P(A)}{P(B)} \]</div>
+                
+                <h3 style="color: #81b29a; margin-top: 1rem; margin-bottom: 0.8rem; font-size: 1.4rem;">• SVM</h3>
+                <p>Support Vector Machines (SVMs) find optimal hyperplanes that separate different classes.</p>
+                <p>But sometimes, a plain old line isn't enough to capture reality — for instance, projectile motion often looks like:</p>
+                <div class="equation">\[ s = a\cdot t + b\cdot t^2 \]</div>
+                <p>which clearly won't fit a straight line. In these cases, SVMs can tap into hyperplanes to handle these curved, multi-dimensional relationships. 
+                    <!-- <a href="projectile_motion.png" target="_blank">Check out this quick projectile example!</a> -->
+                </p>
+                <p>Polynomial kernels let SVMs capture curved boundaries. Formally, a polynomial multi-dimensional SVM looks like:</p>
+                <div class="equation">\[ K(x, x') = (x^T x' + C)^d  \]</div>
+                <p>where \(x\) and \(x'\) are your feature vectors, \(x^T x'\) is their dot product, and \(d\) is the kernel degree (i.e., how "polynomial" you want the relationship to be).</p>
+
+                <!-- <p>We can make this more sophisticated by adding a constant \(c\) before exponentiation:</p>
+                <div class="equation">\[ K(\mathbf{x}, \mathbf{x}') = (\mathbf{x}^T \mathbf{x}' + c)^d \]</div>
+                <p>Here, \(c\) shifts the feature space (often improving performance when data isn't centered), and raising it to the power of \(d\) allows for more complex decision boundaries. Higher \(d\) can model more intricate structures but might lead to overfitting if \(d\) is too large.</p> -->
+                
+                <p>For the math enthusiasts, the polynomial kernel can be expanded as:</p>
+                <div class="equation">
+
+\[ (x^T x')^d = \sum_{i_1 + i_2 + \dots + i_n = d} \frac{d!}{i_1! \, i_2! \, \dots \, i_n!} \,
+x_1^{i_1} x_2^{i_2} \dots x_n^{i_n} \,\,(x_1')^{i_1} (x_2')^{i_2} \dots (x_n')^{i_n} \]
+</div>
+                <p>Here, \(i_1, i_2, \dots, i_n\) are non-negative integers, and the sum of their powers equals \(d\). The multinomial coefficient \(\frac{d!}{i_1! \, i_2! \, \dots \, i_n!}\) counts the number of ways to distribute \(d\) items into \(n\) bins with \(i_1\) items in the first bin, \(i_2\) in the second, and so on.</p>
                 <h2>3. Onset of Complexity: Neural Networks</h2>
                 
+                <p>Neural networks simulate the human brain's structure with layers of interconnected nodes (neurons). Each connection has a weight, and each neuron applies an activation function to its inputs. Through training, these networks adjust their weights to minimize prediction errors. Deep neural networks contain multiple hidden layers, allowing them to learn complex patterns and representations from data.</p>
                 
                 <h2>4. Context-based NNs: RNNs, GRUs, LSTMs</h2>
                 
+                <p>Recurrent Neural Networks (RNNs) process sequential data by maintaining an internal memory. However, they struggle with long-term dependencies. Gated Recurrent Units (GRUs) and Long Short-Term Memory networks (LSTMs) solve this problem using gating mechanisms that control information flow, allowing these models to remember important information over longer sequences.</p>
                 
                 <h2>5. Daddy of ChatGPT: The Transformer</h2>
                 
+                <p>Transformers revolutionized NLP with their attention mechanism, which weighs the importance of different parts of the input sequence. Unlike RNNs, transformers process entire sequences in parallel, making them more efficient. The self-attention mechanism allows each position in the sequence to attend to all positions, capturing long-range dependencies effectively. This architecture powers modern large language models like GPT (Generative Pre-trained Transformer), which produces human-like text by predicting the next token in a sequence based on previous context.</p>
             </div>
         </article>
     </div>
