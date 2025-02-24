@@ -183,13 +183,58 @@ x_1^{i_1} x_2^{i_2} \dots x_n^{i_n} \,\,(x_1')^{i_1} (x_2')^{i_2} \dots (x_n')^{
                 <p>Here, \(i_1, i_2, \dots, i_n\) are non-negative integers, and the sum of their powers equals \(d\). The multinomial coefficient \(\frac{d!}{i_1! \, i_2! \, \dots \, i_n!}\) counts the number of ways to distribute \(d\) items into \(n\) bins with \(i_1\) items in the first bin, \(i_2\) in the second, and so on.</p>
                 <h2>3. Onset of Complexity: Neural Networks</h2>
                 
-                <p>Neural networks simulate the human brain's structure with layers of interconnected nodes (neurons). Each connection has a weight, and each neuron applies an activation function to its inputs. Through training, these networks adjust their weights to minimize prediction errors. Deep neural networks contain multiple hidden layers, allowing them to learn complex patterns and representations from data.</p>
+                <p>So far we have been modelled quantities as multivariate polynomials, but that may not be enough for most prediction tasks. For slightly more complex tasks, such as predicting if an image is a dog or not?</p>
+
+                <p>What we try to do is make multiple predictions, on top of other predictions.</p>
+
+                <p>We fix the number of parameters, model some inherent feature, then try to predict upon the presence/score of THAT feature and so on.</p>
+
+                <p>Something like:</p>
+
+                <div class="equation">\[
+                y = f_{L}\Bigl(
+                W_{L} \cdot f_{L-1}\bigl(
+                W_{L-1} \cdot \dots f_{1}(W_{1}\cdot x + b_{1}) \dots
+                + b_{L-1}
+                \bigr)
+                + b_{L}
+                \Bigr)
+                \]</div>
+
+                <p>Where:<br>
+                x is the input vector<br>
+                y is the output vector<br>
+                L is the number of layers<br>
+                W<sub>i</sub> are the weight matrices for each layer<br>
+                b<sub>i</sub> are the bias vectors for each layer<br>
+                f<sub>i</sub> are the activation functions for each layer
+                </p>
                 
-                <h2>4. Context-based NNs: RNNs, GRUs, LSTMs</h2>
+                <p>Here's a visual explanation to help you understand better:</p>
+                <div style="text-align: center;">
+                    <img src="neural.jpg" alt="Neural Network Diagram" style="max-width: 100%; height: auto; margin: 1.5rem 0;">
+                    <p style="font-size: 0.9rem; color: #3d405b;">Figure: A simple neural network with input, hidden, and output layers.</p>
+                </div>
+
+                <h2>4. Sequential NNs: RNNs (and more)</h2>
+                <p>Congratulations on making it this far! Until now, we've discussed models handling inputs without explicitly capturing dependencies across time or sequence. With RNNs (and similar architectures), we introduce mechanisms to retain and utilize historical information, unlocking a new category of inferences.</p>
+                <p>A common representation of a simple RNN is given by:</p>
+                <div class="equation">
+\[ h_t = \tanh\bigl(W_x\,x_t + W_h\,h_{t-1} + b_h\bigr) \]
+</div>
+<p>where:</p>
+<ul>
+  <li>\(x_t\) is the input at time step \(t\).</li>
+  <li>\(h_t\) is the hidden state at time step \(t\).</li>
+  <li>\(W_x\) is the weight matrix from input to hidden.</li>
+  <li>\(W_h\) is the weight matrix from the previous hidden state to the current hidden state.</li>
+  <li>\(b_h\) is the bias term for the hidden state.</li>
+</ul>
+<br>
+<p>The hidden state \(h_t\) is passed to the next time step as \(h_{t-1}\), enabling the network to capture sequential dependencies by carrying information forward in time. This transfer of the hidden state is what allows RNNs to “remember” relevant aspects of the input history and apply those insights to future predictions.</p>
                 
-                <p>Recurrent Neural Networks (RNNs) process sequential data by maintaining an internal memory. However, they struggle with long-term dependencies. Gated Recurrent Units (GRUs) and Long Short-Term Memory networks (LSTMs) solve this problem using gating mechanisms that control information flow, allowing these models to remember important information over longer sequences.</p>
-                
-                <h2>5. Daddy of ChatGPT: The Transformer</h2>
+<p>Since only binary information is transfered from each state to next, and not all information is relevant hence this and similar architectures(LSTMs, GRUs) fail for very large sequences.</p>
+<h2>5. Daddy of ChatGPT: The Transformer</h2>
                 
                 <p>Transformers revolutionized NLP with their attention mechanism, which weighs the importance of different parts of the input sequence. Unlike RNNs, transformers process entire sequences in parallel, making them more efficient. The self-attention mechanism allows each position in the sequence to attend to all positions, capturing long-range dependencies effectively. This architecture powers modern large language models like GPT (Generative Pre-trained Transformer), which produces human-like text by predicting the next token in a sequence based on previous context.</p>
             </div>
