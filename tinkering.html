@@ -282,6 +282,19 @@
             transform: translateX(3px);
         }
 
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-links .project-link {
+            flex: 1;
+            min-width: 140px;
+            justify-content: center;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -366,7 +379,10 @@
                     <span class="tech">Python</span>
                     <span class="tech">Transformers</span>
                 </div>
-                <a href="https://github.com/SamyakSS83/transformer_pytorch" class="project-link">View on GitHub</a>
+                <div class="project-links">
+                    <a href="https://github.com/SamyakSS83/transformer_pytorch" class="project-link">View Code</a>
+                    <a href="transformer-animation/index.html" class="project-link" style="background: var(--secondary-color);">Visual Explanation</a>
+                </div>
             </div>
 
             <div class="project-card">
