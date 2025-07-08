@@ -1,0 +1,28 @@
+name: samsays
+base: core22
+version: '1.0'
+summary: SamSays ASCII art message generator
+description: |
+  A shell script that generates personalized ASCII art messages
+  by replacing placeholders in a template file with user-provided text.
+
+grade: stable
+confinement: strict
+
+apps:
+  samsays:
+    command: bin/samsays
+    plugs:
+      - home
+
+parts:
+  samsays:
+    plugin: dump
+    source: .
+    source-type: local
+    organize:
+      'samsays.sh': bin/samsays
+      'ascii_output.txt': etc/ascii_output.txt
+    override-prime: |
+      snapcraftctl prime
+      chmod +x $SNAPCRAFT_PRIME/bin/samsays

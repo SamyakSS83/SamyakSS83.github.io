@@ -1,0 +1,27 @@
+name: samsays
+version: '1.0'
+summary: A funny ASCII art display tool
+description: |
+  Samsays is a simple command-line tool that displays your message embedded
+  in cool ASCII art. Just pass your message as an argument and enjoy the fun!
+
+grade: stable
+confinement: strict
+
+base: core20  # This is the base image for your snap
+
+apps:
+  samsays:
+    command: bin/samsays.sh
+    plugs:
+      - home
+
+parts:
+  samsays:
+    source: .
+    plugin: dump
+    organize:
+      bin/samsays.sh: bin/samsays
+      bin/ascii_output.txt: bin/ascii_output.txt
+    stage-packages:
+      - bash

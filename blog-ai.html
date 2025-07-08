@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All You Need to Know to Make Conversation with an AI Scientist - Blog Post</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #1abc9c;
+            --accent-color: #3498db;
+            --highlight-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #e8f5f1 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        nav {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .back-link::before {
+            content: '←';
+            font-size: 1.2rem;
+        }
+
+        .back-link:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .blog-post {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-post::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--highlight-color));
+        }
+
+        .blog-post h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .blog-post h2 {
+            color: var(--primary-color);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .blog-post h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .blog-post h3 {
+            color: var(--accent-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .post-meta {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+            font-weight: 500;
+        }
+
+        .post-content {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .post-content p {
+            margin-bottom: 1.8rem;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        .post-content li {
+            margin-bottom: 0.8rem;
+        }
+
+        .post-content strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .post-content em {
+            color: var(--accent-color);
+            font-style: italic;
+        }
+
+        .post-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .post-content a:hover {
+            color: var(--highlight-color);
+            border-bottom-color: var(--highlight-color);
+        }
+
+        .equation {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .equation .MathJax {
+            font-size: 1.3rem !important;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f5f1, #d5f4e6);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--card-bg);
+            padding: 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'Code';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0 var(--border-radius) 0 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .image-container img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .image-caption {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.8rem;
+            font-style: italic;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+            margin: 3rem 0;
+            border-radius: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .blog-post {
+                padding: 2rem 1.5rem;
+            }
+            
+            .blog-post h1 {
+                font-size: 2.2rem;
+            }
+            
+            .blog-post h2 {
+                font-size: 1.6rem;
+            }
+            
+            .post-content {
+                font-size: 1.1rem;
+            }
+            
+            .equation {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-post h1 {
+                font-size: 1.8rem;
+            }
+            
+            .blog-post h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+            }
+        }
+    </style>
+    <!-- Add MathJax script -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tinkering.html">Tinkering</a></li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <a href="blog.html" class="back-link">← Back to blog</a>
+        
+        <article class="blog-post">
+            <h1>All You Need to Know to Make Conversation with an AI Scientist</h1>
+            <div class="post-meta">February 21, 2025</div>
+            <div class="post-content">
+                <p>AI this, AI that — we have been hearing a lot of AI happening, but what is the core mathematics and rationale that runs and powers this boom? In this post, I will be covering some basics of what makes AI tick and discuss the basic and fundamental architectures that are the building blocks of this AI boom.</p>
+                
+                <p>Alright, on to the main topic. This post presumes some basics in concepts like probability and basic mathematical intuition.</p>
+                
+                <p>What machine learning and Artificial Intelligence tries to do is to write some sort of mathematical equation and then estimate or predict an output for corresponding input parameters. Bluntly, it is a very large and modified prediction problem, that's it!</p>
+                
+                <h2>1. The Basics: Linear Regression (A Fancy Best Fit Line)</h2>
+                
+                <p>If you have been to a physics lab in your 12th grade or college, you will have made a best fit line for some experiment. Congratulations, you have already implemented Linear Regression!</p>
+                
+                <p>A linear regression presumes that your target is a linear function of the input parameters with the equation looking like:</p>
+                
+                <div class="equation">\[ y = a_1 x_1 + a_2 x_2 + \dots + a_n x_n + b \]</div>
+                
+                <p>A fancy way to write this would be using matrices as:</p>
+                
+                <div class="equation">\[ y = W^T X + b \]</div>
+                
+                <p>where W is a weight vector [a₁, a₂, ..., aₙ]<sup>T</sup> and X is the input feature vector [x₁, x₂, ..., xₙ]<sup>T</sup>. This is the most simple modeling approach.</p>
+                
+                <h2>2. The Classifiers: Logistic Regression, Naive Bayes, SVMs</h2>
+                
+                <h3 style="color: #81b29a; margin-top: 1rem; margin-bottom: 0.8rem; font-size: 1.4rem;">• Logistic Regression</h3>
+                <p>Consider the diagram below for the sigmoid function:</p>
+                
+                <div class="equation">\[ y = \frac{1}{1 + e^{-z}} \]</div>
+                
+                <p>You can see that for extreme values of z, y goes to 0 or 1. <br>
+
+                    <img src="sigmoid.png" alt="Sigmoid Function" style="display: block; margin: 1.5rem auto; max-width: 100%; height: auto;"></p>
+                   <p> Congratulations! You have now created a continuous differentiable function (yes that is of importance, especially in backpropagation in complex systems) which acts like an "IF-ELSE"! 
+                    <p>In general, one parameter is not enough, so we do a linear regression on z, thus making the general equation as:</p>
+                
+                <div class="equation">\[ y = \frac{1}{1 + e^{-(W^T X + b)}} \]</div>
+                
+                <h3 style="color: #81b29a; margin-top: 1rem; margin-bottom: 0.8rem; font-size: 1.4rem;">• Naive Bayes</h3>
+                <p>Unlike other algorithms, Naive Bayes presumes all events to be statistically probabilistic and can be modelled using Bayesian probability (i.e., follows Bayes' rule).</p>
+                
+                <div class="equation">\[ P(A \mid B) = \frac{P(B \mid A)\times P(A)}{P(B)} \]</div>
+                
+                <h3 style="color: #81b29a; margin-top: 1rem; margin-bottom: 0.8rem; font-size: 1.4rem;">• SVM</h3>
+                <!-- <p>Support Vector Machines (SVMs) find optimal hyperplanes that separate different classes.</p> -->
+                <p>But sometimes, a plain old line isn't enough to capture reality — for instance, projectile motion often looks like:</p>
+                <div class="equation">\[ s = a\cdot t + b\cdot t^2 \]</div>
+                <p>which clearly won't fit a straight line. In these cases, SVMs can tap into hyperplanes (multinomials) to handle these curved, multi-dimensional relationships. 
+                    <!-- <a href="projectile_motion.png" target="_blank">Check out this quick projectile example!</a> -->
+                </p>
+                <p>Polynomial kernels let SVMs capture curved boundaries. Formally, a polynomial multi-dimensional SVM looks like:</p>
+                <div class="equation">\[ K(x, x') = (x^T x' + C)^d  \]</div>
+                <p>where \(x\) and \(x'\) are your feature vectors, \(x^T x'\) is their dot product, and \(d\) is the kernel degree (i.e., how "polynomial" you want the relationship to be).</p>
+
+                <!-- <p>We can make this more sophisticated by adding a constant \(c\) before exponentiation:</p>
+                <div class="equation">\[ K(\mathbf{x}, \mathbf{x}') = (\mathbf{x}^T \mathbf{x}' + c)^d \]</div>
+                <p>Here, \(c\) shifts the feature space (often improving performance when data isn't centered), and raising it to the power of \(d\) allows for more complex decision boundaries. Higher \(d\) can model more intricate structures but might lead to overfitting if \(d\) is too large.</p> -->
+                
+                <p>For the math enthusiasts, the polynomial kernel can be expanded as:</p>
+                <div class="equation">
+
+\[ (x^T x')^d = \sum_{i_1 + i_2 + \dots + i_n = d} \frac{d!}{i_1! \, i_2! \, \dots \, i_n!} \,
+x_1^{i_1} x_2^{i_2} \dots x_n^{i_n} \,\,(x_1')^{i_1} (x_2')^{i_2} \dots (x_n')^{i_n} \]
+</div>
+                <p>Here, \(i_1, i_2, \dots, i_n\) are non-negative integers, and the sum of their powers equals \(d\). The multinomial coefficient \(\frac{d!}{i_1! \, i_2! \, \dots \, i_n!}\) counts the number of ways to distribute \(d\) items into \(n\) bins with \(i_1\) items in the first bin, \(i_2\) in the second, and so on.</p>
+                <h2>3. Onset of Complexity: Neural Networks</h2>
+                
+                <p>So far we have been modelled quantities as multivariate polynomials, but that may not be enough for most prediction tasks. For slightly more complex tasks, such as predicting if an image is a dog or not?</p>
+
+                <p>What we try to do is make multiple predictions, on top of other predictions.</p>
+
+                <p>We fix the number of parameters, model some inherent feature, then try to predict upon the presence/score of THAT feature and so on.</p>
+
+                <p>Something like:</p>
+
+                <div class="equation">\[
+                y = f_{L}\Bigl(
+                W_{L} \cdot f_{L-1}\bigl(
+                W_{L-1} \cdot \dots f_{1}(W_{1}\cdot x + b_{1}) \dots
+                + b_{L-1}
+                \bigr)
+                + b_{L}
+                \Bigr)
+                \]</div>
+
+                <p>Where:<br>
+                x is the input vector<br>
+                y is the output vector<br>
+                L is the number of layers<br>
+                W<sub>i</sub> are the weight matrices for each layer<br>
+                b<sub>i</sub> are the bias vectors for each layer<br>
+                f<sub>i</sub> are the activation functions for each layer
+                </p>
+                
+                <p>Here's a visual explanation to help you understand better:</p>
+                <div class="image-container">
+                    <img src="neural.jpg" alt="Neural Network Diagram">
+                    <div class="image-caption">Figure: A simple neural network with input, hidden, and output layers showing the flow of information through interconnected nodes.</div>
+                </div>
+
+                <h2>4. Sequential NNs: RNNs (and more)</h2>
+                <p>Congratulations on making it this far! Until now, we've discussed models handling inputs without explicitly capturing dependencies across time or sequence. With RNNs (and similar architectures), we introduce mechanisms to retain and utilize historical information, unlocking a new category of inferences.</p>
+                <p>A common representation of a simple RNN is given by:</p>
+                <div class="equation">
+\[ h_t = \tanh\bigl(W_x\,x_t + W_h\,h_{t-1} + b_h\bigr) \]
+</div>
+<p>where:</p>
+<ul>
+  <li>\(x_t\) is the input at time step \(t\).</li>
+  <li>\(h_t\) is the hidden state at time step \(t\).</li>
+  <li>\(W_x\) is the weight matrix from input to hidden.</li>
+  <li>\(W_h\) is the weight matrix from the previous hidden state to the current hidden state.</li>
+  <li>\(b_h\) is the bias term for the hidden state.</li>
+</ul>
+<br>
+<p>The hidden state \(h_t\) is passed to the next time step as \(h_{t-1}\), enabling the network to capture sequential dependencies by carrying information forward in time. This transfer of the hidden state is what allows RNNs to “remember” relevant aspects of the input history and apply those insights to future predictions.</p>
+                
+<p>Since only binary information is transfered from each state to next, and not all information is relevant hence this and similar architectures(LSTMs, GRUs) fail for very large sequences.</p>
+<h2>5. Daddy of ChatGPT: The Transformer</h2>
+                
+                <p>Alright, we've made it to the big leagues! Remember how RNNs struggled with long sequences because they had to process information step by step, like reading a book one word at a time while trying to remember everything that came before? Well, transformers said "forget that noise" and completely revolutionized how we handle sequences.</p>
+
+                <p>The key insight behind transformers is surprisingly simple: what if we could look at <em>all</em> parts of a sequence simultaneously and let each part decide which other parts are important to pay attention to? It's like having superhuman reading abilities where you can read an entire paragraph at once and automatically highlight the most relevant connections between words.</p>
+
+                <h3 style="color: #81b29a; margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4rem;">The Magic of Self-Attention</h3>
+                
+                <p>The heart of the transformer is the self-attention mechanism. Think of it as a networking event where every word in a sentence gets to introduce itself to every other word and decide how much attention to pay to each one. Mathematically, this looks deceptively simple:</p>
+
+                <div class="equation">\[ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V \]</div>
+
+                <p>But what do these mysterious Q, K, and V actually mean? Let me break this down:</p>
+
+                <ul style="margin: 1.5rem 0; padding-left: 2rem;">
+                    <li><strong>Query (Q):</strong> Think of this as what each word is "asking for" - like a search query</li>
+                    <li><strong>Key (K):</strong> This represents what each word "offers" - like a database key</li>
+                    <li><strong>Value (V):</strong> This is the actual information content each word carries</li>
+                </ul>
+
+                <p>The attention mechanism computes how much each query should attend to each key, then uses those weights to combine the values. The \(\sqrt{d_k}\) term is there to prevent the dot products from getting too large (which would make the softmax too "spiky" and kill gradients during training).</p>
+
+                <h3 style="color: #81b29a; margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4rem;">Multi-Head Attention: Multiple Perspectives</h3>
+
+                <p>But wait, there's more! The transformer doesn't just use one attention mechanism - it uses multiple "heads" in parallel. This is like having several different people read the same sentence, each focusing on different types of relationships:</p>
+
+                <div class="equation">\[ \text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)W^O \]</div>
+
+                <p>where each head is computed as:</p>
+
+                <div class="equation">\[ \text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V) \]</div>
+
+                <p>Think of it this way: one attention head might focus on grammatical relationships (like which adjectives modify which nouns), another might capture semantic similarities, and yet another might track long-range dependencies. It's like having a team of specialists all analyzing the same text from their unique expertise!</p>
+
+                <h3 style="color: #81b29a; margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4rem;">Positional Encoding: Teaching Position Without Recurrence</h3>
+
+                <p>Here's where things get really clever. Since we're processing everything in parallel, we've lost the notion of position that RNNs had naturally. But word order matters! "The cat sat on the mat" means something very different from "The mat sat on the cat" (though both would make for interesting scenarios).</p>
+
+                <p>The solution? Add positional information directly to the input embeddings using sine and cosine functions:</p>
+
+                <div class="equation">\[ PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right) \]</div>
+
+                <div class="equation">\[ PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right) \]</div>
+
+                <p>Why sine and cosine? These functions have a beautiful property: they create a unique "fingerprint" for each position, and the model can learn to detect relative positions through their mathematical relationships. It's like giving each word a unique GPS coordinate!</p>
+
+                <h3 style="color: #81b29a; margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4rem;">The Full Transformer Architecture</h3>
+
+                <p>The complete transformer combines several key components:</p>
+
+                <ol style="margin: 1.5rem 0; padding-left: 2rem;">
+                    <li><strong>Input Embeddings + Positional Encoding:</strong> Convert tokens to vectors and add position info</li>
+                    <li><strong>Multi-Head Self-Attention:</strong> Let each position attend to all positions</li>
+                    <li><strong>Add & Norm:</strong> Residual connections with layer normalization for stable training</li>
+                    <li><strong>Feed-Forward Network:</strong> A simple two-layer MLP to process the attended information</li>
+                    <li><strong>Another Add & Norm:</strong> More residual connections for gradient flow</li>
+                </ol>
+
+                <p>The mathematical flow for each layer looks like:</p>
+
+                <div class="equation">\[ \text{Output}_1 = \text{LayerNorm}(X + \text{MultiHeadAttention}(X)) \]</div>
+
+                <div class="equation">\[ \text{Output}_2 = \text{LayerNorm}(\text{Output}_1 + \text{FFN}(\text{Output}_1)) \]</div>
+
+                <p>where the Feed-Forward Network is typically:</p>
+
+                <div class="equation">\[ \text{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2 \]</div>
+
+                <h3 style="color: #81b29a; margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4rem;">Why Transformers Dominate</h3>
+
+                <p>The transformer architecture has several superpowers that make it perfect for modern AI:</p>
+
+                <ul style="margin: 1.5rem 0; padding-left: 2rem;">
+                    <li><strong>Parallelization:</strong> Unlike RNNs, all positions can be computed simultaneously, making training much faster</li>
+                    <li><strong>Long-range Dependencies:</strong> Direct connections between any two positions mean no information bottlenecks</li>
+                    <li><strong>Interpretability:</strong> Attention weights show us exactly what the model is "looking at"</li>
+                    <li><strong>Scalability:</strong> The architecture scales beautifully with more data and compute</li>
+                </ul>
+
+                <p>This is why every major language model today - GPT, BERT, Claude (that's me!), and countless others - is built on the transformer architecture. We've moved from the sequential, step-by-step processing of RNNs to the parallel, attention-based processing of transformers, and the results speak for themselves.</p>
+
+                <p>And that's the transformer in all its mathematical glory! From humble matrix multiplications to the foundation of modern AI, it's a testament to how elegant mathematical insights can revolutionize entire fields. Next time you chat with an AI, you'll know there's a beautiful dance of queries, keys, and values happening behind the scenes! 🤖✨</p>
+                
+                <div class="section-divider"></div>
+                
+                <div class="highlight-box">
+                    <p><strong>Want to see the transformer in action?</strong> Check out our interactive visualization that brings all these concepts to life with animations and interactive demos!</p>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <a href="transformer/index.html" style="display: inline-block; padding: 12px 24px; background: var(--accent-color); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; transition: var(--transition);">🚀 Explore Interactive Transformer</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: var(--primary-color); color: white; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container" style="text-align: center;">
+            <h3 style="margin-bottom: 1rem;">Explore More</h3>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                <a href="transformer/index.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">Interactive Transformer</a>
+                <a href="tinkering.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">My Projects</a>
+                <a href="index.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">Home</a>
+            </div>
+            <p style="opacity: 0.8; font-size: 0.9rem;">© 2025 Samyak Sanghvi. Making AI accessible, one explanation at a time.</p>
+        </div>
+    </footer>
+</body>
+</html>
