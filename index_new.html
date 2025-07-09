@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samyak Sanghvi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #1abc9c;
+            --text-color: #2c2c2c;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --border-radius: 15px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #e8f5f1 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .profile-header img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top;
+            border: 6px solid var(--card-bg);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .profile-header img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-header p {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .content {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+
+        .content p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .content p strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .content a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .content a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .content a:hover {
+            color: var(--accent-color);
+        }
+
+        .content a:hover::after {
+            width: 100%;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin-top: 2rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(52, 152, 219, 0.4);
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        /* Social links section */
+        .social-links-container {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border-radius: 25px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 1rem 1rem;
+            }
+            
+            .profile-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content {
+                padding: 2rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+            
+            nav a {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tinkering.html">Projects</a></li>
+            <li><a href="blog.html">For the Plot</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="profile-header">
+            <img src="myphoto.jpeg" alt="Samyak Sanghvi">
+            <h1>Samyak Sanghvi</h1>
+            <p>Tinkerer | Tech Enthusiast | Researcher</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello! I'm Samyak, a Junior at <strong>IIT Delhi</strong> pursuing a degree in Computer Science and Engineering. I love to tinker and code for fun.</p>
+            
+            <p>My primary interests lie in <strong>Computer Vision</strong>, <strong>Natural Language Processing</strong>, <strong>System Modelling</strong>, and <strong>Stochastic Processes</strong>.</p>
+            
+            <p>I am currently working as an <strong>Undergraduate Researcher</strong> at the <strong>Computer Vision Lab</strong>, where I'm working on <strong>Gaussian Splatting</strong>. I am also working in the <strong>Computational Chemistry Lab</strong> developing a model to generate novel ligands that bind to protein sequences.</p>
+                
+            <p>I have also worked at the <strong>Additive Manufacturing Lab</strong>, in collaboration with <strong>Sony India</strong> under <strong>Sensing Solution University Collaboration Program (SSUP)</strong>, where I developed algorithms for slicing 3D objects in higher dimensions and creating rule-based fault detection systems.<br> <span style="color: var(--secondary-color);">[Update]</span> We have been published in <strong>IMECE-2025!</strong>!</p>
+
+            <p>Beyond research, I've explored algorithmic robotics, designing systems to detect motor failures and maintain drone stability during critical operations. These experiences have shaped my problem-solving skills and technical expertise.</p>
+            
+            <p>Here is a fun command for you I made in my free time: <a href="https://github.com/SamyakSS83/samsays/tree/main" target="_blank">samsays</a>. <br>And if you ever need to recover lost files from a physical drive, check out this tool I built: <a href="https://github.com/SamyakSS83/filerec" target="_blank">filerec</a></p>
+
+            <p>If you would like to understand the basics of AI and transformers, do visit my blogs <a href="blog-ai.html">AI for Conversation</a> and <a href="transformer-animation/index.html">Transformer Animation</a>. Please feel free to mail me if you find any issues or just want to let me know how they look!</p>
+
+            <p>In my free time, I enjoy solving puzzles. If you're a puzzle enthusiast like me, check out this amazing <a href="https://terrytao.wordpress.com/applets/" target="_blank">blog by Terrence Tao</a>.</p>
+            
+            <a href="samyakcv.pdf" download class="button">Download CV</a>
+        </div>
+    </div>
+
+    <div class="social-links-container">
+        <div class="social-links">
+            <a href="https://github.com/SamyakSS83" target="_blank" class="social-link">
+                <span>GitHub</span>
+            </a>
+            <a href="https://linkedin.com/in/samyakss83" target="_blank" class="social-link">
+                <span>LinkedIn</span>
+            </a>
+            <a href="mailto:samyak@example.com" class="social-link">
+                <span>Email</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
