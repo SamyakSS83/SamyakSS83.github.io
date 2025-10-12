@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Your Computer Manage 3D Models? | 3D Rendering & Reconstruction</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #1abc9c;
+            --accent-color: #3498db;
+            --highlight-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f1de;
+            color: #3d405b;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        nav {
+            background: #3d405b;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            color: #f4f1de;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: #81b29a;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .back-link::before {
+            content: '←';
+            font-size: 1.2rem;
+        }
+
+        .back-link:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .blog-post {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-post::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--highlight-color));
+        }
+
+        .blog-post h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .blog-post h2 {
+            color: var(--primary-color);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .blog-post h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .blog-post h3 {
+            color: var(--accent-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .blog-post h4 {
+            color: var(--primary-color);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .post-meta {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+            font-weight: 500;
+        }
+
+        .post-content {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .post-content p {
+            margin-bottom: 1.8rem;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        .post-content li {
+            margin-bottom: 0.8rem;
+        }
+
+        .post-content strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .post-content em {
+            color: var(--accent-color);
+            font-style: italic;
+        }
+
+        .post-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .post-content a:hover {
+            color: var(--highlight-color);
+            border-bottom-color: var(--highlight-color);
+        }
+
+        .equation {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .equation .MathJax {
+            font-size: 1.3rem !important;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, #e8f5f1, #d5f4e6);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .toc h2::after {
+            display: none;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.8rem;
+        }
+
+        .toc a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .toc a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: var(--border-radius);
+        }
+
+        .alert-box strong {
+            color: #856404;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f5f1, #d5f4e6);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--card-bg);
+            padding: 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .highlight {
+            background: #e8f4f8;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'Code';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0 var(--border-radius) 0 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        video {
+            width: 100%;
+            max-width: 100%;
+            display: block;
+            margin: 30px auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .figure-caption, .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .image-container img {
+            transition: var(--transition);
+        }
+
+        .image-container img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+            margin: 3rem 0;
+            border-radius: 1px;
+        }
+
+        /* Comparison table styles */
+        .compare-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            font-size: 0.98rem;
+            background: #ffffff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .compare-table th {
+            padding: 14px 12px;
+            text-align: left;
+            background: #e07a5f;
+            color: #ffffff;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(0,0,0,0.06);
+        }
+
+        .compare-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ececec;
+            vertical-align: top;
+            color: #333;
+        }
+
+        .compare-table tr:nth-child(even) td {
+            background: #fbfaf8;
+        }
+
+        .compare-table tr:hover td {
+            background: #fff7f3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .blog-post {
+                padding: 2rem 1.5rem;
+            }
+            
+            .blog-post h1 {
+                font-size: 2.2rem;
+            }
+            
+            .blog-post h2 {
+                font-size: 1.6rem;
+            }
+            
+            .post-content {
+                font-size: 1.1rem;
+            }
+            
+            .equation {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .compare-table th, .compare-table td {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-post h1 {
+                font-size: 1.8rem;
+            }
+            
+            .blog-post h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tinkering.html">Projects</a></li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <a href="blog.html" class="back-link">Back to blog</a>
+        
+        <article class="blog-post">
+            <h1>How Does Your Computer Manage 3D Models?</h1>
+            <div class="post-meta">By Samyak Sanghvi | October 12, 2025</div>
+            
+            <div class="post-content">
+                <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#2d-capture">2D Image Capture & Rendering</a></li>
+            <li><a href="#3d-reps">3D Representations</a></li>
+            <li><a href="#rendering">Rendering on the Screen</a></li>
+            <li><a href="#rasterization">Triangle Rasterization</a></li>
+            <li><a href="#gaussian-splat">Gaussian Splatting</a></li>
+            <li><a href="#reconstruction">Monocular and Multi-view 3D Reconstruction</a></li>
+            <li><a href="#sfm-to-gaussian">From Sparse Structure to Dense Gaussians</a></li>
+            <li><a href="#nerf">Neural Radiance Fields (NeRF)</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+    </div>
+
+    <section id="intro">
+        <h2>Introduction</h2>
+        <p>Have you ever wondered how your favorite video game creates stunning 3D worlds, or how your smartphone can capture a scene and reconstruct it in three dimensions? The journey from the real world to pixels on your screen involves a fascinating interplay of mathematics, computer graphics, and modern machine learning. In this blog, we'll explore the complete pipeline of 3D rendering and reconstruction from how cameras capture light to how neural networks can generate photorealistic 3D scenes.</p>
+        
+        <p>We'll start with the basics of 2D image formation, build up to 3D representations like meshes and point clouds, dive into rendering techniques that bring these models to life on your screen, and finally explore cutting-edge reconstruction methods that can create 3D models from photographs. Along the way, we'll see real demos and understand the mathematics that makes it all possible.</p>
+    </section>
+
+    <section id="2d-capture">
+        <h2>2D Image Capture & Rendering</h2>
+        
+        <h3>Why Start with 2D Images?</h3>
+        <p>Before we can understand 3D, we need to grasp how computers see the world in 2D. Digital vision systems begin by capturing light on a 2D sensor, much like how your eye focuses light onto your retina. Understanding 2D sampling, quantization, and color representation is crucial before we add that third dimension of depth. Think of it this way: a 3D model is useless if we can't project it onto a 2D screen or photograph it with a 2D camera!</p>
+        
+        <div class="alert-box">
+            <strong>Dad joke alert:</strong> Why did the pixel go to therapy? It had trouble blending in!
+        </div>
+        
+        <h3>Light, Optics, and Sensors</h3>
+        <p>Everything begins with light. When we look at a scene, every point in space is emitting or reflecting light in various directions. We describe this mathematically as <strong>radiance</strong> \( L(\mathbf{x}, \omega) \), which tells us how much light is traveling from position \( \mathbf{x} \) in direction \( \omega \). A camera's job is to capture this radiance and convert it into a 2D image.</p>
+        
+        <img src="images/Pinhole-camera.png" alt="Pinhole Camera Model">
+        <p class="figure-caption">The pinhole camera model: light rays pass through a single point and project onto the image plane</p>
+        
+        <p>The simplest model of a camera is the <span class="highlight">pinhole camera</span>. Imagine a box with a tiny hole in the front light from the scene passes through this hole and projects an inverted image on the back wall. This model has infinite depth of field (everything is in focus) and no lens aberrations. Real cameras use lenses to gather more light and control focus, but the pinhole model captures the essence of projection: 3D points in the world map to 2D points on the sensor.</p>
+        
+        <h3>From Continuous Irradiance to Digital Pixels</h3>
+        <p>When light hits a camera sensor, it's a continuous signal there are infinitely many points in space and time. But computers need discrete numbers, so the camera <em>samples</em> this continuous signal in three ways:</p>
+        
+        <ul>
+            <li><strong>Spatial sampling:</strong> The sensor is divided into a grid of pixels, each collecting light from a specific region of the image.</li>
+            <li><strong>Temporal sampling:</strong> The camera opens its shutter for a fixed exposure time, integrating all the light that arrives during that period.</li>
+            <li><strong>Color sampling:</strong> Most sensors have red, green, and blue color filters arranged in a pattern (usually the Bayer pattern) to capture different wavelengths.</li>
+        </ul>
+        
+        <p>After sampling, the analog signal (electrical charges from absorbed photons) is converted to digital numbers through <strong>quantization</strong>. This process inevitably introduces small errors and noise that's why low-light photos look grainy!</p>
+        
+        <h3>Demosaicing, Color Spaces, and Gamma</h3>
+        <img src="images/demosaicing_procedure.png" alt="Demosaicing Process">
+        <p class="figure-caption">The Bayer filter pattern and demosaicing process</p>
+        
+        <p>Here's where things get interesting. Most camera sensors capture only one color per pixel either red, green, or blue, arranged in what's called a Bayer pattern. To create a full-color image, the camera must use a process called <span class="highlight">demosaicing</span> to interpolate the missing color values at each pixel.</p>
+        
+        <p>Furthermore, the relationship between the physical light intensity and the stored pixel values isn't linear. Cameras apply <strong>gamma correction</strong> to match how human vision perceives brightness. The standard sRGB color space includes this gamma curve, ensuring images look natural on our screens. Without gamma correction, images would appear too dark in shadows and washed out in highlights!</p>
+        
+        <h3>So... How About 3D?</h3>
+        <p>Now that we understand how 2D images are formed, we can ask the bigger question: cameras see projections of 3D geometry onto 2D planes. How do we represent, manipulate, and render that 3D geometry? How do we go from triangles and volumes to pixels on a screen? Let's dive into the fascinating world of 3D representations!</p>
+    </section>
+
+    <section id="3d-reps">
+        <h2>3D Representations</h2>
+        
+        <h3>3D Representations at a Glance</h3>
+        <p>When it comes to representing three-dimensional objects in a computer, we have several options, each with its own strengths and weaknesses:</p>
+        
+        <ul>
+            <li><strong>Point Clouds:</strong> The simplest representation just a collection of 3D coordinates \((x, y, z)\). These are usually generated by sensors like LiDAR or from multi-view reconstruction. Point clouds are lightweight but don't explicitly define surfaces or connectivity.</li>
+            
+            <li><strong>Meshes:</strong> Vertices connected into faces, typically triangles. This is the workhorse of computer graphics! Meshes explicitly represent surfaces and are efficient to render. Game engines and 3D modeling software heavily rely on triangle meshes.</li>
+            
+            <li><strong>Voxels:</strong> A regular 3D grid where each cell (voxel) stores occupancy or color information. Think of it as 3D pixels. While intuitive and easy to work with, voxels can be memory-intensive for high-resolution scenes.</li>
+            
+            <li><strong>Implicit Fields:</strong> Instead of explicitly storing geometry, we use a continuous function \( f(\mathbf{x}) \) that defines surfaces implicitly. For example, a <em>Signed Distance Field (SDF)</em> gives the distance to the nearest surface, with negative values inside the object. This representation is smooth and resolution-independent but requires evaluation at query points.</li>
+        </ul>
+        
+        <p>One of the most common challenges is converting between these representations. For instance, how do we go from a scattered point cloud to a connected mesh surface? This is where <span class="highlight">Delaunay triangulation</span> comes in!</p>
+        
+        <h3>From Points to Surfaces: Delaunay Triangulation</h3>
+        <p>Imagine you have a bunch of points scattered in space maybe from a 3D scanner or a structure-from-motion reconstruction. You want to connect these points into triangles (in 2D) or tetrahedra (in 3D) to form a mesh. But not just any triangulation will do we want one that creates well-shaped, non-overlapping elements.</p>
+        
+        <p>The <strong>Delaunay triangulation</strong> provides exactly this. Its key property is beautifully simple: <em>no point should lie inside the circumcircle (or circumsphere in 3D) of any triangle (or tetrahedron)</em>. This criterion has profound implications:</p>
+        
+        <ul>
+            <li>It produces non-overlapping, well-shaped triangles</li>
+            <li>It avoids skinny, degenerate triangles that cause numerical instability</li>
+            <li>It maximizes the minimum angle among all possible triangulations</li>
+            <li>In 3D, the boundary of the Delaunay tetrahedralization gives us a mesh surface</li>
+        </ul>
+        
+        <h3>How Delaunay Triangulation Works</h3>
+        <p>The most popular algorithm for computing Delaunay triangulations is the <strong>Bowyer–Watson incremental insertion algorithm</strong>. Here's how it works:</p>
+        
+        <ol>
+            <li><strong>Initialization:</strong> Start with a large "super-triangle" (or tetrahedron in 3D) that encloses all input points.</li>
+            
+            <li><strong>Incremental Insertion:</strong> Add points one at a time. For each new point \( p \):
+                <ul>
+                    <li>Find all triangles whose circumcircle contains \( p \) these violate the Delaunay property</li>
+                    <li>Remove these triangles; they form what's called the <strong>cavity</strong></li>
+                    <li>Connect \( p \) to all vertices on the boundary of the cavity, creating new Delaunay triangles</li>
+                </ul>
+            </li>
+            
+            <li><strong>Cleanup:</strong> Remove all triangles connected to the initial super-triangle vertices. What remains is your Delaunay triangulation!</li>
+        </ol>
+        
+        <p>Let's see this process in action with a step-by-step animation:</p>
+        
+        <video controls>
+            <source src="images/delaunay_triangulation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="figure-caption">Delaunay triangulation: watch as points are incrementally inserted and the triangulation maintains the empty circumcircle property</p>
+        
+        <p>In the video above, you can see how each new point (shown in green) is added to the triangulation. The red dashed circles show circumcircles, and red triangles indicate the cavity that gets removed. The algorithm then reconnects the green point to the cavity boundary, maintaining the Delaunay property. This local update makes the algorithm very efficient we don't need to recompute the entire triangulation for each new point!</p>
+    </section>
+
+    <section id="rendering">
+        <h2>Rendering on the Screen</h2>
+        
+        <h3>The Graphics Pipeline: From 3D to 2D</h3>
+        <p>Now that we have 3D representations, we need to render them onto a 2D screen. Modern graphics hardware (your GPU) uses a highly optimized pipeline that transforms millions of triangles into pixels at incredible speeds often 60 times per second or faster!</p>
+        
+        <img src="images/Pinhole-Camera-Model-ideal-projection-of-a-3D-object-on-a-2D-image.png" alt="3D to 2D Projection">
+        <p class="figure-caption">The camera model for rendering: projecting 3D objects onto a 2D image plane</p>
+        
+        <p>The rendering pipeline consists of several key stages, each performing a specific transformation. Let's walk through them:</p>
+        
+        <h3>1. Model Transform: Positioning Objects in the World</h3>
+        <p>First, we place our 3D objects in world space using a <strong>model transform</strong> matrix \( M \). This is how we position, rotate, and scale objects. For example, if you want to place a car model at a specific location and angle in your game world, you'd apply a model transform:</p>
+        
+        <div class="equation">
+\[ \mathbf{p}_{\text{world}} = M \cdot \mathbf{p}_{\text{local}} \]
+        </div>
+        
+        <p>where \( \mathbf{p}_{\text{local}} \) is a vertex in the object's own coordinate system, and \( \mathbf{p}_{\text{world}} \) is its position in world space.</p>
+        
+        <h3>2. View Transform: Looking at the World</h3>
+        <p>Next, we apply a <strong>view transform</strong> \( V \) that represents the camera's position and orientation. This transforms coordinates from world space to camera space (also called "eye space" or "view space"). The camera is now at the origin, looking down the negative \( z \)-axis:</p>
+        
+        <div class="equation">
+\[ \mathbf{p}_{\text{camera}} = V \cdot \mathbf{p}_{\text{world}} \]
+        </div>
+        
+        <p>The view matrix is typically constructed from the camera's position, the point it's looking at, and an "up" direction. Most graphics libraries provide a <code>lookAt</code> function that builds this matrix for you.</p>
+        
+        <h3>3. Projection Transform: Creating Perspective</h3>
+        <p>Now comes the magic: we use a <strong>projection matrix</strong> \( P \) to map 3D camera-space coordinates into a normalized 2D viewing volume. There are two main types of projection:</p>
+        
+        <ul>
+            <li><strong>Perspective projection:</strong> Objects farther away appear smaller (like real vision). This is what makes 3D scenes look realistic. The projection transform includes a division by the \( z \)-coordinate (depth), creating the perspective effect.</li>
+            
+            <li><strong>Orthographic projection:</strong> Parallel lines stay parallel, and objects don't shrink with distance. Useful for technical drawings and 2D games.</li>
+        </ul>
+        
+        <div class="equation">
+\[ \mathbf{p}_{\text{clip}} = P \cdot \mathbf{p}_{\text{camera}} \]
+        </div>
+        
+        <p>The perspective projection matrix looks like this (for a symmetric frustum):</p>
+        
+        <div class="equation">
+\[ P = \begin{bmatrix}
+\frac{1}{\tan(\text{fov}/2) \cdot \text{aspect}} & 0 & 0 & 0 \\
+0 & \frac{1}{\tan(\text{fov}/2)} & 0 & 0 \\
+0 & 0 & -\frac{f+n}{f-n} & -\frac{2fn}{f-n} \\
+0 & 0 & -1 & 0
+\end{bmatrix} \]
+        </div>
+        
+        <p>where \( \text{fov} \) is the field of view angle, \( \text{aspect} \) is the aspect ratio, and \( n, f \) are the near and far clipping planes.</p>
+        
+        <h3>4. Viewport Transform and Rasterization</h3>
+        <p>After projection, we perform <strong>perspective division</strong> by dividing by the \( w \) component (which stores the original \( z \) value). This gives us <strong>normalized device coordinates (NDC)</strong> in the range \([-1, 1]\). Finally, the <strong>viewport transform</strong> scales these coordinates to actual pixel positions on your screen.</p>
+        
+        <p>Now comes the heavy lifting: <strong>rasterization</strong>. The GPU determines which pixels are covered by each triangle and runs shaders to compute their final colors. We'll dive deep into this process in the next section!</p>
+        
+        <h3>Depth Testing and the Z-Buffer</h3>
+        <p>When multiple triangles overlap the same pixel, how does the GPU know which one is in front? Enter the <strong>depth buffer (z-buffer)</strong>. For each pixel, the GPU stores the depth of the closest surface. When rasterizing a new triangle, if its depth at a pixel is less than the current depth buffer value, we update both the color and depth. Otherwise, we discard it (it's hidden behind something else).</p>
+        
+        <img src="images/disadvantage-depth-buffer-made.png" alt="Depth Buffer Issues">
+        <p class="figure-caption">Depth buffer artifacts can occur with insufficient precision or incorrect near/far planes</p>
+        
+        <p>This simple algorithm has one issue: <strong>z-fighting</strong>. When two surfaces are at almost the same depth, floating-point precision errors can cause flickering as the GPU can't consistently determine which is in front. The solution? Ensure adequate depth buffer precision (24 or 32 bits) and carefully choose your near and far clipping planes to maximize depth resolution where it matters.</p>
+    </section>
+
+    <section id="rasterization">
+        <h2>Triangle Rasterization</h2>
+        
+        <h3>Filling Triangles: The Heart of Real-Time Graphics</h3>
+        <p>Triangle rasterization is the workhorse of modern graphics. Every 3D model you see in a game or 3D application is broken down into thousands (or millions) of triangles, and each triangle needs to be converted into pixels. This process happens billions of times per second on your GPU!</p>
+        
+        <p>The basic problem is this: given a triangle defined by three 2D vertices (after projection), determine which pixels lie inside it and what color each pixel should be. Let's break down how this works.</p>
+        
+        <h3>Barycentric Coordinates: Smooth Interpolation Across Triangles</h3>
+        <p>Before we can shade a pixel, we need to interpolate attributes (like colors, texture coordinates, or normals) across the triangle's surface. The elegant solution is <strong>barycentric coordinates</strong>. For any point \( \mathbf{p} \) inside a triangle with vertices \( \mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2 \), we can express it as:</p>
+        
+        <div class="equation">
+\[ \mathbf{p} = w_0 \mathbf{v}_0 + w_1 \mathbf{v}_1 + w_2 \mathbf{v}_2 \]
+        </div>
+        
+        <p>where \( w_0 + w_1 + w_2 = 1 \) and all \( w_i \geq 0 \) if \( \mathbf{p} \) is inside the triangle. These weights \( (w_0, w_1, w_2) \) are the barycentric coordinates, and they have a beautiful property: they tell us how much influence each vertex has on point \( \mathbf{p} \). A point near \( \mathbf{v}_0 \) will have \( w_0 \) close to 1 and the others near 0.</p>
+        
+        <p>To interpolate any attribute \( A \) (like color or texture coordinates) stored at the vertices, we simply use:</p>
+        
+        <div class="equation">
+\[ A(\mathbf{p}) = w_0 A_0 + w_1 A_1 + w_2 A_2 \]
+        </div>
+        
+        <h3>But There's a Catch: Perspective-Correct Interpolation!</h3>
+        <p>Here's where things get tricky. The simple linear interpolation above (called <em>affine interpolation</em>) works fine in 2D, but in 3D with perspective projection, it gives incorrect results! Why? Because points that are equally spaced in 3D don't map to equally spaced points in 2D screen space after perspective projection.</p>
+        
+        <p>The solution is <strong>perspective-correct interpolation</strong>. Instead of interpolating attributes directly, we interpolate \( A/z \) (attribute divided by depth) and \( 1/z \), then divide:</p>
+        
+        <div class="equation">
+\[ A(\mathbf{p}) = \frac{w_0 (A_0/z_0) + w_1 (A_1/z_1) + w_2 (A_2/z_2)}{w_0/z_0 + w_1/z_1 + w_2/z_2} \]
+        </div>
+        
+        <p>This might seem like a strange mathematical trick, but it's essential for correct texture mapping! Let's see the difference:</p>
+        
+        <video controls>
+            <source src="images/perspective_interpolation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="figure-caption">Left: Naive affine interpolation produces warped textures. Right: Perspective-correct interpolation maintains proper texture appearance</p>
+        
+        <p>Notice how the left side (naive interpolation) produces a warped checkerboard pattern that doesn't correctly represent the 3D surface? The right side uses perspective-correct interpolation and looks much more realistic. This is why modern GPUs always use perspective-correct interpolation for texture coordinates and other varying attributes.</p>
+        
+        <h3>Shading Models: From Flat to Phong</h3>
+        <p>Once we know which pixels belong to a triangle and have interpolated the necessary attributes, we need to compute the final color. This is where <strong>shading models</strong> come in. Let's explore three classic approaches:</p>
+        
+        <h4>Flat Shading</h4>
+        <p>The simplest approach: compute one color for the entire triangle based on its normal vector. This is fast but produces faceted appearance, clearly showing individual triangles. It was common in early 3D games but looks quite dated now.</p>
+        
+        <h4>Gouraud Shading (Smooth Shading)</h4>
+        <p>Compute lighting at each vertex, then interpolate the resulting colors across the triangle using barycentric coordinates. This is much smoother than flat shading but can miss specular highlights that would appear in the middle of triangles.</p>
+        
+        <h4>Phong Shading</h4>
+        <p>The gold standard for quality. Store normal vectors at each vertex and interpolate these normals across the triangle. Then compute lighting per-pixel using the interpolated normal. This captures highlights accurately but requires more computation.</p>
+        
+        <p>The Phong illumination model itself combines three terms:</p>
+        
+        <div class="equation">
+\[ I = k_a I_a + k_d I_d \max(0, \mathbf{N} \cdot \mathbf{L}) + k_s I_s \max(0, \mathbf{R} \cdot \mathbf{V})^n \]
+        </div>
+        
+        <p>where:</p>
+        <ul>
+            <li>\( k_a I_a \) is ambient lighting (constant base illumination)</li>
+            <li>\( k_d I_d (\mathbf{N} \cdot \mathbf{L}) \) is diffuse lighting (Lambertian reflection)</li>
+            <li>\( k_s I_s (\mathbf{R} \cdot \mathbf{V})^n \) is specular lighting (shiny highlights)</li>
+            <li>\( \mathbf{N} \) is the surface normal, \( \mathbf{L} \) is the light direction, \( \mathbf{R} \) is the reflection direction, and \( \mathbf{V} \) is the view direction</li>
+        </ul>
+        
+        <p>Let's see these shading models in action on a textured sphere:</p>
+        
+        <video controls>
+            <source src="images/shading_comparison.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="figure-caption">Three shading models compared: Flat (left), Lambert/Diffuse (center), and Phong with specular highlights (right)</p>
+        
+        <p>The difference is striking! Flat shading looks blocky, Lambert shading is smooth but matte, and Phong shading adds those realistic specular highlights that make surfaces look shiny and three-dimensional.</p>
+        
+        <h3>Putting It All Together: The Full Pipeline</h3>
+        <p>Modern GPUs execute this entire pipeline in parallel for millions of triangles. Vertex shaders transform geometry, rasterizers determine pixel coverage, and fragment shaders compute final colors. The z-buffer handles visibility, and frame buffers store the result. All of this happens in mere milliseconds, repeated 60+ times per second to create smooth, interactive 3D experiences!</p>
+        
+        <video controls>
+            <source src="images/pyramid_triangle.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="figure-caption">Triangle rasterization in action: a simple pyramid with each face drawn in a different color</p>
+    </section>
+
+    <section id="gaussian-splat">
+        <h2>Gaussian Splatting</h2>
+        
+        <h3>A Different Approach to Rendering</h3>
+        <p>So far, we've focused on traditional triangle rasterization the method that has dominated computer graphics for decades. But what if instead of triangles, we represented surfaces as collections of small, fuzzy "splats"? This is the idea behind <strong>Gaussian splatting</strong>, an increasingly popular technique that bridges classical rendering and modern neural scene representations.</p>
+        
+        <p>Instead of polygons with hard edges, Gaussian splats are smooth, overlapping blobs of color. Each splat is defined by a 3D position \( \boldsymbol{\mu} \), a covariance matrix \( \Sigma \) that determines its size and orientation, and a color/opacity. When rendered, these splats blend together to form a continuous surface.</p>
+        
+        <h3>What Is a Gaussian Splat?</h3>
+        <p>A Gaussian splat in 3D is centered at position \( \boldsymbol{\mu} \) with a probability density function:</p>
+        
+        <div class="equation">
+\[ G(\mathbf{x}) = \frac{1}{(2\pi)^{3/2} |\Sigma|^{1/2}} \exp\left( -\frac{1}{2}(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu}) \right) \]
+        </div>
+        
+        <p>This might look intimidating, but it's just a 3D bell curve! The covariance matrix \( \Sigma \) determines how the splat is stretched and oriented in space. Near the center \( \boldsymbol{\mu} \), the Gaussian has high intensity, smoothly falling off to zero as we move away.</p>
+        
+        <h3>Projecting Gaussians to the Screen</h3>
+        <p>Here's the beautiful part: when we project a 3D Gaussian through a perspective camera onto the 2D image plane, it remains a Gaussian just now a 2D one! The projection transforms the 3D covariance \( \Sigma \) into a 2D covariance matrix \( \Sigma' \) that describes an ellipse on the screen.</p>
+        
+        <img src="images/gaussian_proj_ellipse.png" alt="Gaussian Projection">
+        <p class="figure-caption">A 3D Gaussian projects to a 2D elliptical splat on the screen</p>
+        
+        <p>The math works out elegantly using the Jacobian \( J \) of the projection transformation:</p>
+        
+        <div class="equation">
+\[ \Sigma' = J \Sigma J^T \]
+        </div>
+        
+        <p>This 2D covariance matrix defines an ellipse. We can compute its major and minor axes (the eigenvalues \( \lambda_1, \lambda_2 \)) and orientation (from the eigenvectors) to render the splat as a 2D elliptical blob.</p>
+        
+        <h3>Rendering Gaussian Splats</h3>
+        <p>To render a scene with Gaussian splats, we:</p>
+        
+        <ol>
+            <li>Project each 3D Gaussian to a 2D ellipse on the screen</li>
+            <li>Sort the splats from back to front (based on their depth/distance from camera)</li>
+            <li>Alpha-blend them together using the formula:
+                <div class="equation">
+\[ C = \sum_{i=1}^{N} c_i \alpha_i \prod_{j=1}^{i-1} (1 - \alpha_j) \]
+                </div>
+                where \( c_i \) is the color of splat \( i \), \( \alpha_i \) is its opacity, and the product term ensures closer splats occlude those behind them.
+            </li>
+        </ol>
+        
+        <p>Let's see Gaussian splatting in action:</p>
+        
+        <video controls>
+            <source src="images/pyramid_gaussian.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="figure-caption">Gaussian splatting: each face of the pyramid is represented by small Gaussian splats that blend together to form a smooth surface. Selected splats are shown as translucent ellipses.</p>
+        
+        <p>Notice how the splats create a smooth, continuous appearance even though we're essentially rendering thousands of small, overlapping blobs. This representation has several advantages over traditional triangle meshes:</p>
+        
+        <ul>
+            <li><strong>Smooth gradients:</strong> No sharp triangle edges; everything blends naturally</li>
+            <li><strong>Flexible detail:</strong> We can add splats where needed for fine detail and use fewer in smooth regions</li>
+            <li><strong>Differentiable:</strong> The entire rendering process can be differentiated with respect to splat parameters, making it perfect for optimization with neural networks</li>
+            <li><strong>View-dependent effects:</strong> Splats can have view-dependent colors, enabling representation of reflections and other complex light interactions</li>
+        </ul>
+        
+        <h3>Culling, Splitting, and Pruning</h3>
+        <p>When working with millions of Gaussian splats (common in real applications), we need efficient management strategies:</p>
+        
+        <ul>
+            <li><strong>Culling:</strong> Discard splats that are outside the camera's field of view or too far away to matter. This is done via frustum culling using the splat's 3D position and extent.</li>
+            
+            <li><strong>Splitting/Densification:</strong> If a region needs more detail, we can split large splats into multiple smaller ones. This is often done adaptively during training when reconstructing scenes from images.</li>
+            
+            <li><strong>Pruning:</strong> Remove splats with very low opacity (\( \alpha \approx 0 \)) or that contribute negligibly to the final image. This keeps the representation compact and efficient.</li>
+        </ul>
+        
+        <h3>Gaussian Splatting for 3D Reconstruction</h3>
+        <p>Now here's where things get really exciting. We've seen how to <em>render</em> Gaussian splats, but what about using them to <em>reconstruct</em> 3D scenes from photographs? This is where Gaussian splatting truly shines, combining the best of explicit representations with differentiable optimization.</p>
+        
+        <div class="demo-box">
+            <p><em>Dad joke time:</em> How to ENHANCE A <s>sparse 3d</s> MODEL using gaussians?</p>
+        </div>
+        
+        <h3>Building on Structure from Motion</h3>
+        <p>Remember our discussion of Structure from Motion? It gives us a sparse point cloud and camera poses. Gaussian Splatting takes this sparse skeleton and turns it into a photorealistic, dense representation. Here's how it works:</p>
+        
+        <h4>Initialization from SfM</h4>
+        <p>Each point in the sparse SfM point cloud becomes the center \( \boldsymbol{\mu}_i \) of a 3D Gaussian. We initialize:</p>
+        
+        <ul>
+            <li><strong>Position:</strong> Set to the SfM 3D point location</li>
+            <li><strong>Covariance:</strong> Start with a small isotropic Gaussian (sphere) or estimate from local point density</li>
+            <li><strong>Color:</strong> Sample from the images where this feature was observed</li>
+            <li><strong>Opacity:</strong> Start at moderate values (around 0.5)</li>
+        </ul>
+        
+        <p>Because we're initializing from SfM, we start from a geometrically accurate configuration. And crucially, we already know all the camera poses this eliminates the difficult pose estimation problem during optimization!</p>
+        
+        <h4>Differentiable Optimization</h4>
+        <p>Here's the magic: the entire Gaussian rendering pipeline (project, sort, alpha-blend) is <strong>fully differentiable</strong>. This means we can:</p>
+        
+        <ol>
+            <li>Render training views by splatting the Gaussians</li>
+            <li>Compare rendered images to the actual photographs</li>
+            <li>Compute gradients of the image loss with respect to ALL Gaussian parameters (\( \boldsymbol{\mu}, \Sigma, \mathbf{c}, \alpha \))</li>
+            <li>Update parameters using gradient descent (typically Adam optimizer)</li>
+        </ol>
+        
+        <p>The loss function combines L1 loss and D-SSIM (a perceptual similarity metric):</p>
+        
+        <div class="equation">
+\[ \mathcal{L} = (1 - \lambda) \mathcal{L}_1 + \lambda \mathcal{L}_{\text{D-SSIM}} \]
+        </div>
+        
+        <p>This is exactly like training a neural network, except instead of optimizing network weights, we're optimizing the positions, shapes, colors, and opacities of millions of Gaussians!</p>
+        
+        <h4>Adaptive Densification</h4>
+        <p>Starting from sparse SfM points (say 10K), we need to densify to cover the entire scene. During optimization, the algorithm adaptively adjusts the number of Gaussians:</p>
+        
+        <ul>
+            <li><strong>Split large Gaussians:</strong> If a Gaussian is too large but still has high gradients (it's trying to represent detail), split it into two smaller Gaussians. Each child can then specialize.</li>
+            
+            <li><strong>Clone Gaussians:</strong> In regions with high reconstruction error but few Gaussians, clone nearby Gaussians to fill the gap.</li>
+            
+            <li><strong>Prune low-opacity Gaussians:</strong> Remove Gaussians with \( \alpha \approx 0 \) that don't contribute to the image.</li>
+        </ul>
+        
+        <p>Through these operations, the representation grows from ~10K initial points to hundreds of thousands or millions of Gaussians, creating a truly dense scene representation.</p>
+        
+        <h4>Spherical Harmonics for View Dependence</h4>
+        <p>To capture view-dependent appearance (specular highlights, reflections), we can't just store one RGB color per Gaussian. Instead, we store <strong>spherical harmonic coefficients</strong> that represent how color varies with viewing direction:</p>
+        
+        <div class="equation">
+\[ \mathbf{c}(\mathbf{d}) = \sum_{l=0}^{L} \sum_{m=-l}^{l} c_{lm} Y_l^m(\mathbf{d}) \]
+        </div>
+        
+        <p>where \( Y_l^m \) are spherical harmonic basis functions (think of them like Fourier basis functions, but on a sphere), and \( c_{lm} \) are learned coefficients. Using degree 3 (\( L=3 \), giving 16 coefficients per RGB channel) captures most view-dependent effects while remaining compact.</p>
+        
+        <h3>Training and Convergence</h3>
+        <p>The typical training process runs for 20K-30K iterations and takes just 10-30 minutes on a modern GPU (compared to hours or days for NeRF). The pipeline is:</p>
+        
+        <ol>
+            <li>Initialize Gaussians from SfM point cloud</li>
+            <li>For each iteration:
+                <ul>
+                    <li>Sample a training view</li>
+                    <li>Render by projecting and blending Gaussians</li>
+                    <li>Compute loss vs ground truth image</li>
+                    <li>Backpropagate and update parameters</li>
+                    <li>Every 100-500 iterations: densify/prune</li>
+                </ul>
+            </li>
+            <li>Final result: 100K-1M+ optimized Gaussians</li>
+        </ol>
+        
+        <h3>Why Is Gaussian Splatting So Fast?</h3>
+        <p>Compared to NeRF, Gaussian Splatting achieves incredible speed advantages:</p>
+        
+        <ul>
+            <li><strong>Explicit representation:</strong> Gaussians are stored directly in memory no need to query a neural network millions of times per image</li>
+            
+            <li><strong>GPU-friendly rasterization:</strong> The project-sort-blend pipeline maps beautifully to GPU architectures and can leverage hardware rasterization</li>
+            
+            <li><strong>Efficient culling:</strong> We can quickly discard Gaussians outside the view frustum using standard graphics techniques</li>
+            
+            <li><strong>Real-time rendering:</strong> Once trained, rendering runs at 30-100 FPS on consumer GPUs something impossible with NeRF</li>
+        </ul>
+        
+        <h3>Gaussian Splatting vs NeRF: The Trade-offs</h3>
+        
+        <p><strong>Gaussian Splatting wins on:</strong></p>
+        <ul>
+            <li>Training speed: 10-100× faster (minutes vs hours)</li>
+            <li>Rendering speed: 1000×+ faster (real-time vs seconds per frame)</li>
+            <li>Visual quality: comparable or better for most scenes</li>
+            <li>Editability: explicit Gaussians are easier to manipulate than implicit networks</li>
+            <li>Direct control: can add/remove/modify individual Gaussians</li>
+        </ul>
+        
+        <p><strong>NeRF wins on:</strong></p>
+        <ul>
+            <li>True continuity: infinite resolution, no discrete primitives</li>
+            <li>Memory for simple scenes: network weights can be more compact than millions of Gaussians</li>
+            <li>Some effects: very fine transparency, participating media (fog, smoke)</li>
+            <li>Research ecosystem: enormous body of work with many specialized variants</li>
+        </ul>
+        
+        <p>In practice, <strong>Gaussian Splatting has become the go-to method for applications requiring real-time rendering</strong>: VR/AR experiences, game asset creation from photogrammetry, digital twins, interactive scene exploration, and more. NeRF remains valuable for offline rendering and as a research platform for exploring novel view synthesis techniques.</p>
+        
+        <p>The key insight: by combining explicit representations (Gaussians) with differentiable rendering and gradient-based optimization, we get photorealistic quality with real-time performance. It's truly the best of both worlds!</p>
+    </section>
+
+    <section id="reconstruction">
+        <h2>Monocular and Multi-view 3D Reconstruction</h2>
+        
+        <h3>The Inverse Problem: From 2D Images Back to 3D</h3>
+        <p>So far, we've focused on rendering: taking a 3D model and projecting it to create 2D images. But what about the inverse problem? Can we take 2D photographs and reconstruct the 3D scene they depict? This is the goal of <strong>3D reconstruction</strong>, and it's one of the most fascinating and challenging problems in computer vision.</p>
+        
+        <p>The problem is fundamentally ill-posed: a single 2D image could correspond to infinitely many 3D scenes. Imagine looking at a photograph of a building—you can see its front face, but you have no idea how deep it is or what's on the sides and back. To resolve this ambiguity, we need either <strong>multiple views</strong> (multi-view reconstruction) or strong prior knowledge about what objects typically look like (for monocular reconstruction using AI).</p>
+        
+        <div class="demo-box">
+            <p><em>Dad joke time:</em> How to RECONSTRUCT A <s>3D</s> MODEL?</p>
+        </div>
+        
+        <h3>Epipolar Geometry: The Foundation of Multi-View Reconstruction</h3>
+        <p>When we have multiple images of the same scene from different viewpoints, we can exploit the geometric relationships between views to recover 3D structure. The key mathematical tool is <strong>epipolar geometry</strong>—the intrinsic projective geometry between two views.</p>
+        
+        <img src="images/Epipolar_geometry.png" alt="Epipolar Geometry" style="max-width: 100%; height: auto; margin: 20px 0;">
+        <p class="figure-caption">Epipolar geometry: A 3D point X projects to x in the left image and x' in the right. The baseline connects the two camera centers, and epipolar lines show the constraint.</p>
+        
+        <p>Here's the geometric setup: You have two cameras looking at the same 3D point \( \mathbf{X} \). The point projects to \( \mathbf{x} \) in the first image and \( \mathbf{x'} \) in the second. Now, the three points—the 3D point \( \mathbf{X} \) and the two camera centers \( C \) and \( C' \)—form a plane called the <strong>epipolar plane</strong>.</p>
+        
+        <p>This plane intersects each image plane in a line—these are the <strong>epipolar lines</strong>. The crucial insight: if you see a point \( \mathbf{x} \) in the first image, the corresponding point \( \mathbf{x'} \) in the second image must lie on the epipolar line associated with \( \mathbf{x} \). This dramatically reduces the correspondence search from 2D (the entire image) to 1D (along a line)!</p>
+        
+        <h4>The Fundamental Matrix: Encoding Epipolar Geometry</h4>
+        <p>The relationship between corresponding points is captured algebraically by the <strong>fundamental matrix</strong> \( F \). For any pair of corresponding points \( \mathbf{x} \) and \( \mathbf{x'} \) (in homogeneous coordinates), they satisfy:</p>
+        
+        <div class="equation">
+\[ \mathbf{x'}^T F \mathbf{x} = 0 \]
+        </div>
+        
+        <p>This is the <strong>epipolar constraint</strong>. The fundamental matrix \( F \) is a 3×3 matrix with rank 2 that simultaneously encodes:</p>
+        <ul>
+            <li>The relative pose (rotation and translation) between the two cameras</li>
+            <li>The intrinsic calibration parameters of both cameras</li>
+            <li>How to compute epipolar lines: \( \mathbf{l}' = F \mathbf{x} \) gives the epipolar line in image 2 corresponding to point \( \mathbf{x} \) in image 1</li>
+        </ul>
+        
+        <p>We can estimate \( F \) from 8 or more point correspondences using the <strong>8-point algorithm</strong>. In practice, we use RANSAC (Random Sample Consensus) to handle outliers—incorrect matches that violate the epipolar constraint.</p>
+        
+        <h4>The Essential Matrix: For Calibrated Cameras</h4>
+        <p>If we know the camera intrinsics \( K \) and \( K' \) (focal length, principal point), we can work in <strong>normalized image coordinates</strong>. In this calibrated setting, we use the <strong>essential matrix</strong> \( E \):</p>
+        
+        <div class="equation">
+\[ \tilde{\mathbf{x'}}^T E \tilde{\mathbf{x}} = 0, \quad \text{where } \tilde{\mathbf{x}} = K^{-1} \mathbf{x} \]
+        </div>
+        
+        <p>The essential matrix has a beautiful, clean geometric interpretation. Given rotation \( R \) and translation \( \mathbf{t} \) from camera 1 to camera 2:</p>
+        
+        <div class="equation">
+\[ E = [\mathbf{t}]_\times R \]
+        </div>
+        
+        <p>where \( [\mathbf{t}]_\times \) is the <strong>skew-symmetric cross-product matrix</strong>:</p>
+        
+        <div class="equation">
+\[ [\mathbf{t}]_\times = \begin{bmatrix} 0 & -t_z & t_y \\ t_z & 0 & -t_x \\ -t_y & t_x & 0 \end{bmatrix} \]
+        </div>
+        
+        <p>For calibrated cameras, \( E \) can be computed from just 5 point correspondences using the <strong>5-point algorithm</strong> (versus 8 points for \( F \)). Once we have \( E \), we decompose it using SVD to extract \( R \) and \( \mathbf{t} \)—though note that the scale of translation is ambiguous (two-view geometry can only recover relative, not absolute scale).</p>
+        
+        <h3>Triangulation: Reconstructing 3D Points</h3>
+        <p>Once we know the camera poses (rotation and translation), we can triangulate 3D points from their 2D correspondences. The idea is geometrically intuitive: each 2D observation defines a ray in 3D space emanating from the camera center. The 3D point lies at the intersection of these rays.</p>
+        
+        <img src="images/triangulation.png" alt="Triangulation" style="max-width: 100%; height: auto; margin: 20px 0;">
+        <p class="figure-caption">Triangulation: Rays from two camera centers theoretically intersect at the 3D point, but noise means we minimize reprojection error instead.</p>
+        
+        <h4>Linear Triangulation (DLT Method)</h4>
+        <p>Given projection matrices \( P_1 \) and \( P_2 \) (which encode intrinsics and extrinsics) and corresponding image points \( \mathbf{x}_1 \) and \( \mathbf{x}_2 \), we want to find the 3D point \( \mathbf{X} \) that projects to both. The projection equations are:</p>
+        
+        <div class="equation">
+\[ \mathbf{x}_1 \sim P_1 \mathbf{X}, \quad \mathbf{x}_2 \sim P_2 \mathbf{X} \]
+        </div>
+        
+        <p>where \( \sim \) means "equal up to scale" (homogeneous coordinates). For the vectors to be parallel, their cross product must be zero: \( \mathbf{x}_1 \times (P_1 \mathbf{X}) = \mathbf{0} \). Expanding this for each view gives us a linear system \( A\mathbf{X} = \mathbf{0} \):</p>
+        
+        <div class="equation">
+\[ \begin{bmatrix} x_1 \mathbf{p}_1^{3T} - \mathbf{p}_1^{1T} \\ y_1 \mathbf{p}_1^{3T} - \mathbf{p}_1^{2T} \\ x_2 \mathbf{p}_2^{3T} - \mathbf{p}_2^{1T} \\ y_2 \mathbf{p}_2^{3T} - \mathbf{p}_2^{2T} \end{bmatrix} \mathbf{X} = \mathbf{0} \]
+        </div>
+        
+        <p>where \( \mathbf{p}_i^{jT} \) is the j-th row of projection matrix \( P_i \). We solve this homogeneous system using <strong>SVD (Singular Value Decomposition)</strong>—the solution is the right singular vector corresponding to the smallest singular value. This gives us \( \mathbf{X} \) in homogeneous coordinates; we divide by the fourth coordinate to get the 3D point.</p>
+        
+        <h4>Optimal Triangulation: Minimizing Reprojection Error</h4>
+        <p>The linear DLT method is fast but not statistically optimal. In the presence of noise (and real measurements always have noise!), the rays from each camera won't intersect perfectly. A better approach is to find the 3D point that minimizes the <strong>reprojection error</strong>:</p>
+        
+        <div class="equation">
+\[ \mathbf{X}^* = \arg\min_{\mathbf{X}} \sum_{i} d(\mathbf{x}_i, \pi(P_i \mathbf{X}))^2 \]
+        </div>
+        
+        <p>where \( \pi(P_i \mathbf{X}) \) is the projection of \( \mathbf{X} \) through camera \( P_i \) (including perspective division), and \( d(\cdot, \cdot) \) is the Euclidean distance in the image. This is a nonlinear least-squares problem solved using methods like Levenberg-Marquardt, initialized with the DLT solution.</p>
+        
+        <p><strong>Important note on baselines:</strong> Triangulation is ill-conditioned when the cameras are too close together (small baseline). The rays become nearly parallel, and small measurement errors lead to huge depth errors. This is why you need good camera separation for accurate 3D reconstruction!</p>
+        
+        <h3>Photometric Consistency: The MVS Principle</h3>
+        <p>So far we've talked about sparse reconstruction: triangulating feature points detected in images. But what if we want <strong>dense reconstruction</strong>—depth for every pixel, not just keypoints? This is the realm of <strong>Multi-View Stereo (MVS)</strong>.</p>
+        
+        <p>The key assumption in MVS is <strong>photometric consistency</strong> (also called the brightness constancy assumption): if two pixels in different images correspond to the same 3D surface point, they should have similar colors/intensities (ignoring changes in illumination, viewpoint-dependent effects like specularities, etc.).</p>
+        
+        <p>Given a pixel in a reference image, we search for the corresponding pixel in other images by:</p>
+        <ol>
+            <li><strong>Restricting the search to epipolar lines</strong> (1D search instead of 2D)</li>
+            <li><strong>Testing depth hypotheses:</strong> for each candidate depth \( d \), project the 3D point at that depth into other views</li>
+            <li><strong>Computing photometric cost:</strong> measure similarity between patches (e.g., normalized cross-correlation or SSD—sum of squared differences)</li>
+            <li><strong>Selecting the best depth:</strong> choose the depth with minimum cost (highest photometric consistency)</li>
+        </ol>
+        
+        <p>The photometric loss for a given 3D point \( \mathbf{X} \) across multiple views is:</p>
+        
+        <div class="equation">
+\[ \mathcal{L}_{\text{photo}}(\mathbf{X}) = \sum_{i,j} w_{ij} \| I_i(\pi_i(\mathbf{X})) - I_j(\pi_j(\mathbf{X})) \|^2 \]
+        </div>
+        
+        <p>where \( I_i \) is image \( i \), \( \pi_i(\mathbf{X}) \) projects \( \mathbf{X} \) into image \( i \), and \( w_{ij} \) are visibility weights. Minimizing this loss with respect to \( \mathbf{X} \) (or per-pixel depth) gives us dense geometry!</p>
+        
+        <p>Modern MVS methods combine photometric consistency with regularization (smoothness priors, since nearby pixels usually have similar depths) and may use plane-sweep algorithms, patch-match techniques, or learning-based approaches to handle occlusions, textureless regions, and non-Lambertian surfaces.</p>
+        
+        <h3>The Complete 3D Reconstruction Pipeline</h3>
+        <p>Let me tie it all together. A typical reconstruction pipeline from images to 3D model involves these stages:</p>
+        
+        <ol>
+            <li><strong>Image Acquisition:</strong> Capture multiple photos of the scene from different viewpoints (phone camera photos work great!)</li>
+            
+            <li><strong>Sparse Reconstruction (Structure from Motion):</strong>
+                <ul>
+                    <li>Detect features (SIFT, ORB, etc.) in all images</li>
+                    <li>Match features across image pairs</li>
+                    <li>Estimate pairwise geometry (fundamental/essential matrices)</li>
+                    <li>Incrementally build the reconstruction: start with two views, triangulate points, add more views using PnP (Perspective-n-Point), triangulate new points</li>
+                    <li>Global bundle adjustment: jointly optimize all camera poses and all 3D points to minimize total reprojection error</li>
+                    <li><strong>Output:</strong> Sparse point cloud + camera poses</li>
+                </ul>
+            </li>
+            
+            <li><strong>Dense Reconstruction (Multi-View Stereo):</strong>
+                <ul>
+                    <li>For each pixel in a reference image, compute depth using photometric consistency across multiple views</li>
+                    <li>Use depth maps from multiple reference images and fuse them into a consistent 3D model</li>
+                    <li>Apply filtering to remove outliers and noise</li>
+                    <li><strong>Output:</strong> Dense point cloud</li>
+                </ul>
+            </li>
+            
+            <li><strong>Surface Reconstruction:</strong>
+                <ul>
+                    <li>Convert dense point cloud to mesh using Poisson surface reconstruction, screened Poisson, or ball-pivoting</li>
+                    <li>Texture the mesh by projecting images onto the surface</li>
+                    <li><strong>Output:</strong> Textured 3D mesh</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <p><strong>COLMAP: The Gold Standard</strong></p>
+        <p><strong>COLMAP</strong> is the most popular open-source software for Structure from Motion and Multi-View Stereo. It automates the entire pipeline above and is incredibly robust. You literally drag in a folder of photos, click "Reconstruct," and wait. COLMAP handles:</p>
+        
+        <ul>
+            <li>Automatic feature extraction and matching</li>
+            <li>Incremental and global SfM with sophisticated bundle adjustment</li>
+            <li>Dense reconstruction with patch-match stereo</li>
+            <li>Mesh generation (via Poisson reconstruction)</li>
+        </ul>
+        
+        <p>The dense MVS in COLMAP uses a patch-match algorithm that's both accurate and efficient. It computes depth maps for multiple reference images, checks for geometric and photometric consistency, and fuses them into a final dense point cloud. The results are often stunning—photorealistic 3D models from casual photo collections!</p>
+        
+        <p><strong>Time-consuming parts:</strong> For large scenes with hundreds of images, bundle adjustment can take hours (optimizing thousands of cameras and millions of points). Dense MVS is also computationally expensive since we're computing depth for millions of pixels, each requiring multiple photometric consistency evaluations. But modern implementations use GPUs and clever spatial data structures to speed things up.</p>
+        
+        <h3>The Structure from Motion Pipeline in Detail</h3>
+        <p>Let's take a deeper look at Structure from Motion (SfM), as it's the foundation for many modern reconstruction methods, including Gaussian Splatting. SfM is the process of recovering both the 3D structure of a scene and the camera poses from a collection of 2D images. Think of it as photogrammetry powered by computer vision algorithms.</p>
+        
+        <p>The complete pipeline works as follows:</p>
+        
+        <h4>Step 1: Feature Detection and Description</h4>
+        <p>First, we need to find distinctive points in each image—points that we can reliably identify even when viewed from different angles or under different lighting conditions. Popular feature detectors include:</p>
+        
+        <ul>
+            <li><strong>SIFT (Scale-Invariant Feature Transform):</strong> Finds keypoints that are invariant to scale, rotation, and partially invariant to illumination changes. Each keypoint gets a 128-dimensional descriptor capturing the local image gradient structure.</li>
+            
+            <li><strong>ORB (Oriented FAST and Rotated BRIEF):</strong> A faster alternative to SIFT, using binary descriptors. Great for real-time applications.</li>
+            
+            <li><strong>SuperPoint (learned features):</strong> Modern deep learning-based detectors that can find even more reliable correspondences.</li>
+        </ul>
+        
+        <p>For each detected keypoint, we compute a descriptor—a numerical "fingerprint" that describes the appearance of the image region around that point. These descriptors allow us to match the same physical point across different images.</p>
+        
+        <h4>Step 2: Feature Matching</h4>
+        <p>Now we need to find correspondences: which feature in image A corresponds to which feature in image B? We compare descriptors using distance metrics (like L2 distance for SIFT or Hamming distance for ORB). A good match has a descriptor in image B that's much closer to the descriptor in image A than any other descriptor.</p>
+        
+        <p>To avoid false matches, we use <strong>Lowe's ratio test</strong>: a match is accepted only if the distance to the nearest neighbor is significantly less than the distance to the second-nearest neighbor. We also use <strong>RANSAC (Random Sample Consensus)</strong> with the epipolar constraint to filter out outliers—matches that don't satisfy the geometric constraints implied by the camera geometry.</p>
+        
+        <h4>Step 3: Estimating Relative Camera Poses</h4>
+        <p>Given matches between two images, we can estimate their relative camera pose (rotation and translation) using the <strong>Essential Matrix</strong> \( E \) (for calibrated cameras). The essential matrix relates corresponding points via:</p>
+        
+        <div class="equation">
+\[ \mathbf{x}_2^T E \mathbf{x}_1 = 0 \]
+        </div>
+        
+        <p>where \( \mathbf{x}_1 \) and \( \mathbf{x}_2 \) are corresponding points in normalized image coordinates. We compute \( E \) using the <strong>5-point algorithm</strong> inside a RANSAC loop to handle outliers. Then we decompose \( E \) into rotation \( R \) and translation \( \mathbf{t} \):</p>
+        
+        <div class="equation">
+\[ E = [\mathbf{t}]_\times R \]
+        </div>
+        
+        <p>where \( [\mathbf{t}]_\times \) is the skew-symmetric matrix representing the cross product with \( \mathbf{t} \). There are four possible decompositions, but only one places points in front of both cameras—we test this using triangulation.</p>
+        
+        <h4>Step 4: Triangulation</h4>
+        <p>With known camera poses and corresponding 2D points, we can triangulate to find the 3D position. Each 2D observation provides a ray in 3D space; the 3D point lies at the intersection of these rays. In practice, rays rarely intersect exactly due to noise, so we find the point that minimizes the reprojection error—the sum of squared distances between the 3D point's projection and the observed 2D points.</p>
+        
+        <p>For two views with projection matrices \( P_1 \) and \( P_2 \), we solve the linear system:</p>
+        
+        <div class="equation">
+\[ \begin{bmatrix} \mathbf{x}_1 \times (P_1 \mathbf{X}) \\ \mathbf{x}_2 \times (P_2 \mathbf{X}) \end{bmatrix} = 0 \]
+        </div>
+        
+        <p>This gives us the 3D point \( \mathbf{X} \) in homogeneous coordinates.</p>
+        
+        <h4>Step 5: Incremental Reconstruction</h4>
+        <p>For multiple images, SfM proceeds incrementally. We start with an initial pair of images (selected to have good baseline and many matches), reconstruct their relative pose and triangulate points. Then we repeatedly:</p>
+        
+        <ol>
+            <li>Select a new image that sees many already-reconstructed 3D points</li>
+            <li>Estimate its pose using <strong>Perspective-n-Point (PnP)</strong> solving for the camera pose given 2D-3D correspondences</li>
+            <li>Triangulate new 3D points visible in this image and previous ones</li>
+            <li>Run local <strong>bundle adjustment</strong> to refine camera poses and 3D points jointly</li>
+        </ol>
+        
+        <h4>Step 6: Global Bundle Adjustment</h4>
+        <p>After incrementally adding all images, we run a final global bundle adjustment—a large nonlinear optimization that refines all camera parameters and all 3D points simultaneously to minimize the total reprojection error across all views:</p>
+        
+        <div class="equation">
+\[ \min_{\{P_i\}, \{\mathbf{X}_j\}} \sum_{i,j} \| \mathbf{x}_{ij} - \pi(P_i, \mathbf{X}_j) \|^2 \]
+        </div>
+        
+        <p>where \( \mathbf{x}_{ij} \) is the observed 2D point, \( \pi(P_i, \mathbf{X}_j) \) projects 3D point \( \mathbf{X}_j \) through camera \( P_i \), and the sum is over all observations. This is a massive optimization problem (tens of thousands of variables for large scenes!) but specialized solvers like Ceres or g2o handle it efficiently using sparse matrix techniques.</p>
+        
+        <p>The output of SfM is:</p>
+        <ul>
+            <li>A <strong>sparse point cloud</strong> of 3D feature locations (typically thousands to millions of points)</li>
+            <li><strong>Calibrated camera poses</strong> (position and orientation) for all input images</li>
+            <li><strong>Intrinsic camera parameters</strong> (focal length, principal point, distortion) if not known beforehand</li>
+        </ul>
+        
+        <p>Tools like <strong>COLMAP</strong> (a popular open-source SfM software) automate this entire pipeline and produce high-quality reconstructions from unordered photo collections. You can feed in vacation photos and get a 3D model of the scene!</p>
+        
+        <h3>Monocular Depth Estimation: Single-Image 3D</h3>
+        <p>What if we only have one image? Traditional geometric methods fail—there's no way to resolve the depth ambiguity without additional information. But this is where machine learning shines! Modern deep neural networks trained on large datasets can learn priors about typical scene geometry and predict surprisingly accurate depth maps from single images.</p>
+        
+        <p>Networks like MiDaS and DPT take a single RGB image as input and output a per-pixel depth estimate. They work by learning statistical patterns: floors are typically at the bottom of images, the sky is far away, objects that occlude others are closer, and so on. While not perfect, these monocular depth networks enable 3D understanding from photos where multi-view reconstruction isn't possible.</p>
+    </section>
+
+    <section id="sfm-to-gaussian">
+        <h2>From Sparse Structure to Dense Gaussians</h2>
+        <p>Okay, so we've got a sparse point cloud from Structure from Motion—thousands or maybe millions of 3D points scattered through the scene, each one representing a feature that was matched across multiple images. But here's the problem: that's a <em>sparse</em> representation. When you render it, you see a cloud of dots with huge gaps. It doesn't look like the original scene at all.</p>
+        
+        <p>This is where Gaussian Splatting comes in to save the day. Let me explain how it brilliantly builds on top of SfM to create a photorealistic reconstruction.</p>
+        
+        <h3>The Sparse-to-Dense Problem</h3>
+        <p>SfM gives us feature points—corners, edges, high-gradient regions where feature detectors fired. But what about the smooth surfaces in between? What about texture on walls, or the gradients in the sky? SfM doesn't capture those because feature detectors don't fire there. The point cloud has big holes.</p>
+        
+        <p>Classical approaches try to fill these holes with meshing (like Poisson surface reconstruction) or dense multi-view stereo (MVS) which estimates depth for every pixel. But these have issues: meshes struggle with thin structures and complex topology, while MVS is computationally expensive and sensitive to texture-less regions.</p>
+        
+        <h3>Gaussian Splatting's Clever Initialization</h3>
+        <p>Gaussian Splatting takes a different approach. It starts with the sparse SfM point cloud and says: "Each of these points isn't just a point—it's the center of a 3D Gaussian." Here's the magic of this initialization:</p>
+        
+        <h4>1. Every SfM Point Becomes a Gaussian</h4>
+        <p>For each 3D point \( \mathbf{X}_i \) from SfM, we create a Gaussian with:</p>
+        
+        <ul>
+            <li><strong>Position \( \boldsymbol{\mu}_i \)</strong>: Set to the SfM 3D point location \( \mathbf{X}_i \)</li>
+            <li><strong>Covariance \( \Sigma_i \)</strong>: Initialized based on the local point density. We look at the k-nearest neighbors and estimate an initial size/shape. Typically starts as a small isotropic blob.</li>
+            <li><strong>Color \( \mathbf{c}_i \)</strong>: We can average the colors of pixels where this feature was observed across different images</li>
+            <li><strong>Opacity \( \alpha_i \)</strong>: Initialized to a moderate value, will be optimized later</li>
+        </ul>
+        
+        <p>So instead of starting from random initialization (which would be a nightmare to optimize), we leverage the geometric information that SfM worked hard to compute. We're starting from a configuration that's already approximately correct!</p>
+        
+        <h4>2. Camera Poses Are Known</h4>
+        <p>Even better: SfM gave us accurate camera calibration. We know exactly where each training image was taken from, the camera intrinsics, everything. This is huge! It means during optimization, we don't need to solve for camera poses—we can focus entirely on optimizing the Gaussian parameters to match the training images.</p>
+        
+        <p>This makes the optimization much more stable. Instead of a chicken-and-egg problem (need poses to reconstruct scene, need scene to estimate poses), we have a well-posed problem: given known viewpoints, find the best Gaussian representation.</p>
+        
+        <h3>The Densification Process</h3>
+        <p>Here's where Gaussian Splatting really shines over the sparse SfM point cloud. During optimization, the algorithm doesn't just move and resize existing Gaussians—it actively <strong>densifies</strong> the representation. Two key operations make this happen:</p>
+        
+        <h4>Splitting Large Gaussians</h4>
+        <p>If a Gaussian becomes too large (high variance) but still has high gradient during optimization (meaning it's trying to model detail), it gets split into multiple smaller Gaussians. Each child Gaussian can then specialize to model different parts of the surface more accurately. This is how smooth surfaces get filled in—one SfM point might spawn several Gaussians to model a wall's texture variation.</p>
+        
+        <h4>Cloning Underdense Regions</h4>
+        <p>If there's a region with high reconstruction error but few Gaussians (maybe SfM missed features there due to low texture), Gaussians near that region get cloned. This fills in the gaps in the sparse SfM coverage. The clones then optimize to match the observed appearance.</p>
+        
+        <p>Through these operations, the Gaussian count can grow from the initial sparse SfM points (say 10K points) to hundreds of thousands or millions of Gaussians—creating a truly dense representation.</p>
+        
+        <h3>Why Gaussians Win Over Sparse Points</h3>
+        <p>Let's compare what we get from SfM alone versus Gaussian Splatting:</p>
+        
+        <table class="compare-table" aria-describedby="compare-caption">
+            <caption id="compare-caption" style="text-align:left; padding:8px 12px; font-weight:600; color:#555;">Comparison: Sparse SfM Points vs Gaussian Splatting</caption>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Sparse SfM Points</th>
+                    <th>Gaussian Splatting</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Coverage</strong></td>
+                    <td>Only features (corners, edges)</td>
+                    <td>Fills entire surfaces through densification</td>
+                </tr>
+                <tr>
+                    <td><strong>Rendering Quality</strong></td>
+                    <td>Looks like a point cloud (sparse dots)</td>
+                    <td>Photorealistic with view-dependent effects</td>
+                </tr>
+                <tr>
+                    <td><strong>Surface Representation</strong></td>
+                    <td>No surface info, just discrete points</td>
+                    <td>Gaussians have extent and shape, model surfaces</td>
+                </tr>
+                <tr>
+                    <td><strong>View-Dependent Appearance</strong></td>
+                    <td>Not modeled</td>
+                    <td>Spherical harmonics capture view dependence</td>
+                </tr>
+                <tr>
+                    <td><strong>Optimization</strong></td>
+                    <td>Fixed after bundle adjustment</td>
+                    <td>Continuously optimized with adaptive density control</td>
+                </tr>
+                <tr>
+                    <td><strong>Rendering Speed</strong></td>
+                    <td>Fast (just point rasterization)</td>
+                    <td>Real-time with GPU splatting</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>The Complete Pipeline: Photos to Photorealistic Gaussians</h3>
+        <p>Let me tie it all together. The full reconstruction workflow is:</p>
+        
+        <ol>
+            <li><strong>Capture images</strong> of your scene from multiple viewpoints (phone photos work great!)</li>
+            <li><strong>Run COLMAP</strong> (or another SfM system) to get:
+                <ul>
+                    <li>Sparse 3D point cloud (e.g., 50K points)</li>
+                    <li>Camera poses and intrinsics</li>
+                </ul>
+            </li>
+            <li><strong>Initialize Gaussians</strong> by placing one at each SfM point with estimated size/color</li>
+            <li><strong>Optimize for 30K iterations</strong> (takes ~20 minutes on a GPU):
+                <ul>
+                    <li>Render each training view by splatting Gaussians</li>
+                    <li>Compute loss between rendered and actual image</li>
+                    <li>Backpropagate to update Gaussian parameters</li>
+                    <li>Every few thousand iterations, run densification (split/clone)</li>
+                    <li>Prune Gaussians with very low opacity</li>
+                </ul>
+            </li>
+            <li><strong>Result</strong>: 500K+ Gaussians that render photorealistically from any viewpoint!</li>
+        </ol>
+        
+        <p>The beauty is that SfM does the hard geometric work (correspondence, triangulation, bundle adjustment), and Gaussian Splatting focuses on the appearance modeling and densification. It's a perfect division of labor.</p>
+        
+        <h3>Beyond SfM Initialization</h3>
+        <p>While SfM initialization is the standard approach, researchers are exploring alternatives:</p>
+        
+        <ul>
+            <li><strong>Random initialization</strong>: Start with random Gaussians. Surprisingly, with enough iterations, it can work! But it's slower and less stable.</li>
+            <li><strong>Depth-based initialization</strong>: Use monocular depth networks or RGB-D sensors to get initial depth, then backproject to 3D.</li>
+            <li><strong>LiDAR points</strong>: For outdoor scenes, LiDAR scans provide dense initial geometry.</li>
+        </ul>
+        
+        <p>But in practice, the SfM-based initialization remains the gold standard because it provides both accurate geometry and camera calibration in one shot.</p>
+    </section>
+
+    <section id="nerf">
+        <h2>Neural Radiance Fields (NeRF)</h2>
+        
+        <h3>A Revolutionary Approach to 3D Reconstruction</h3>
+        <p>In 2020, a paper called "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis" took the computer vision world by storm. NeRF introduced a completely new way to represent 3D scenes: instead of using explicit geometry like meshes or point clouds, it represents scenes as continuous 5D functions learned by neural networks. The results were photorealistic novel views that surpassed everything that came before.</p>
+        
+        <h3>The NeRF Representation</h3>
+        <p>A NeRF represents a static scene as a continuous function \( F_\Theta \) that maps a 5D input 3D location \( \mathbf{x} = (x, y, z) \) and 2D viewing direction \( \mathbf{d} = (\theta, \phi) \) to a 4D output:</p>
+        
+        <div class="equation">
+\[ F_\Theta(\mathbf{x}, \mathbf{d}) \to (\mathbf{c}, \sigma) \]
+        </div>
+        
+        <p>where:</p>
+        <ul>
+            <li>\( \mathbf{c} = (r, g, b) \) is the RGB color at that location when viewed from direction \( \mathbf{d} \)</li>
+            <li>\( \sigma \) is the volume density (how opaque the space is at that location)</li>
+        </ul>
+        
+        <p>This function is represented by a multilayer perceptron (MLP) a relatively simple neural network with 8-10 fully-connected layers. The network weights \( \Theta \) are optimized to reproduce the training views of the scene.</p>
+        
+        <h3>Rendering with Volume Rendering</h3>
+        <p>To render an image, we cast a ray from the camera through each pixel and integrate along the ray using the <strong>volume rendering equation</strong>:</p>
+        
+        <div class="equation">
+\[ C(\mathbf{r}) = \int_{t_n}^{t_f} T(t) \sigma(\mathbf{r}(t)) \mathbf{c}(\mathbf{r}(t), \mathbf{d}) \, dt \]
+        </div>
+        
+        <p>where:</p>
+        <ul>
+            <li>\( \mathbf{r}(t) = \mathbf{o} + t\mathbf{d} \) is the ray from camera origin \( \mathbf{o} \) in direction \( \mathbf{d} \)</li>
+            <li>\( T(t) = \exp\left(-\int_{t_n}^{t} \sigma(\mathbf{r}(s)) ds\right) \) is the accumulated transmittance (how much light reaches point \( t \) from the camera)</li>
+            <li>The integral accumulates color \( \mathbf{c} \) weighted by density \( \sigma \) and transmittance \( T \)</li>
+        </ul>
+        
+        <p>In practice, this integral is approximated using stratified sampling along the ray. We query the network at regularly spaced points (plus some random jitter) and numerically integrate using:</p>
+        
+        <div class="equation">
+\[ \hat{C}(\mathbf{r}) = \sum_{i=1}^{N} T_i (1 - \exp(-\sigma_i \delta_i)) \mathbf{c}_i \]
+        </div>
+        
+        <p>where \( \delta_i = t_{i+1} - t_i \) is the distance between sample points, and \( T_i = \exp\left(-\sum_{j=1}^{i-1} \sigma_j \delta_j\right) \).</p>
+        
+        <img src="images/a-Original-NeRF-sampling-method-with-no-depth-priors-for-wide-range-sampling-b.png" alt="NeRF Sampling">
+        <p class="figure-caption">NeRF samples points along rays and queries the neural network to get colors and densities, then integrates to produce the pixel color</p>
+        
+        <h3>Training a NeRF</h3>
+        <p>Training is elegantly simple: we optimize the network weights \( \Theta \) to minimize the difference between rendered pixel colors and the ground-truth colors from training images. The loss function is just mean squared error:</p>
+        
+        <div class="equation">
+\[ \mathcal{L} = \sum_{\mathbf{r} \in \mathcal{R}} \| \hat{C}(\mathbf{r}) - C(\mathbf{r}) \|^2 \]
+        </div>
+        
+        <p>where \( \mathcal{R} \) is a batch of rays randomly sampled from the training images.</p>
+        
+        <p>The brilliant insight is that this is fully <strong>differentiable</strong>. We can backpropagate gradients from the pixel colors through the volume rendering integral, through the network, all the way to the scene representation. Over thousands of training iterations, the network learns to encode the 3D geometry and appearance of the scene.</p>
+        
+        <h3>Positional Encoding: Capturing High-Frequency Detail</h3>
+        <p>Neural networks with standard inputs struggle to represent high-frequency details (sharp edges, fine textures). NeRF solves this using <strong>positional encoding</strong> mapping each coordinate through periodic functions before feeding it to the network:</p>
+        
+        <div class="equation">
+\[ \gamma(p) = (\sin(2^0 \pi p), \cos(2^0 \pi p), \ldots, \sin(2^{L-1} \pi p), \cos(2^{L-1} \pi p)) \]
+        </div>
+        
+        <p>This expands each scalar coordinate into a high-dimensional vector of sinusoids at different frequencies. The network can now capture details at multiple scales, from coarse overall shape to fine texture.</p>
+        
+        <h3>Hierarchical Sampling for Efficiency</h3>
+        <p>Querying the network at 100+ points along every ray is expensive, especially if most of those points are in empty space or behind surfaces. NeRF uses a clever two-stage sampling strategy:</p>
+        
+        <ol>
+            <li><strong>Coarse network:</strong> Sample uniformly along the ray and evaluate a "coarse" network to get an initial density estimate.</li>
+            <li><strong>Fine network:</strong> Use the coarse densities to build a probability distribution that focuses samples where density is high (near surfaces). Sample again using this informed distribution and evaluate a "fine" network.</li>
+        </ol>
+        
+        <p>This concentrates computational effort where it matters near visible surfaces while spending few resources on empty space.</p>
+        
+        <h3>Strengths and Limitations</h3>
+        <p>NeRF's strengths are remarkable:</p>
+        <ul>
+            <li>Photorealistic rendering quality that captures complex lighting, reflections, and fine details</li>
+            <li>Continuous representation with arbitrary resolution (can render at any resolution)</li>
+            <li>Captures view-dependent effects naturally</li>
+            <li>Works for complex, non-Lambertian materials</li>
+        </ul>
+        
+        <p>But it has limitations too:</p>
+        <ul>
+            <li><strong>Slow training:</strong> Optimizing the network can take hours or even days for a single scene</li>
+            <li><strong>Slow rendering:</strong> Each pixel requires hundreds of network evaluations, making real-time rendering challenging</li>
+            <li><strong>Static scenes only:</strong> The original NeRF can't handle dynamic scenes (though extensions exist)</li>
+            <li><strong>Requires many calibrated views:</strong> You need dozens to hundreds of images from known camera poses</li>
+        </ul>
+        
+        <p>Despite these limitations, NeRF sparked a revolution. It demonstrated that neural networks could implicitly represent 3D scenes with unprecedented quality, opening the door to a flood of follow-up work addressing its shortcomings—including the Gaussian splatting techniques we explored earlier, which combine explicit representations with differentiable optimization to achieve both quality and speed!</p>
+    </section>
+
+    <section id="conclusion">
+        <h2>Conclusion: The Future of 3D Graphics</h2>
+        
+        <p>We've journeyed from the basics of how cameras capture 2D light patterns, through the mathematics of 3D geometry and rendering, to the cutting edge of neural 3D reconstruction. Along the way, we've seen how triangles are rasterized into pixels, how Gaussian splats offer a smooth alternative to hard-edged polygons, and how modern AI can reconstruct photorealistic 3D scenes from photographs.</p>
+        
+        <p>The field is evolving rapidly. Traditional triangle-based graphics the backbone of gaming and real-time rendering for decades is being augmented and sometimes replaced by learned representations. Neural radiance fields showed us that scenes could be encoded in network weights rather than explicit geometry. Gaussian splatting demonstrated that explicit representations aren't obsolete; they can be combined with gradient-based optimization to get the best of both worlds: quality and speed.</p>
+        
+        <p>Looking forward, we can expect:</p>
+        
+        <ul>
+            <li><strong>Hybrid approaches:</strong> Combining traditional meshes with neural representations for the best performance and quality trade-offs</li>
+            
+            <li><strong>Real-time neural rendering:</strong> As hardware improves and algorithms become more efficient, techniques like NeRF will become viable for interactive applications</li>
+            
+            <li><strong>Democratized 3D creation:</strong> Capturing high-quality 3D scenes will become as easy as taking photos or videos, enabling everyone to create immersive content</li>
+            
+            <li><strong>Dynamic scenes:</strong> Current methods mostly handle static scenes. Future work will seamlessly handle motion, deformations, and time-varying appearances</li>
+            
+            <li><strong>Generative 3D:</strong> Large-scale generative models (like DALL-E for images) will create 3D content from text prompts or sketches</li>
+        </ul>
+        
+        <p>Whether you're a game developer, computer vision researcher, VR enthusiast, or just someone curious about how computers see and create 3D worlds, I hope this deep dive has given you a solid understanding of the fundamental principles and exciting possibilities in 3D rendering and reconstruction. The best part? This field is still in its early stages, and the most exciting developments are yet to come!</p>
+        
+        <div class="alert-box">
+            <strong>Final dad joke:</strong> Why do 3D graphics researchers make terrible comedians? Because their jokes always fall flat... in 2D! 🎤
+        </div>
+        
+    </section>
+            </div>
+        </article>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: var(--primary-color); color: white; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container" style="text-align: center;">
+            <h3 style="margin-bottom: 1rem;">Explore More</h3>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                <a href="blog.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">Back to Blog</a>
+                <a href="tinkering.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">My Projects</a>
+                <a href="index.html" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">Home</a>
+            </div>
+            <p style="opacity: 0.8; font-size: 0.9rem;">© 2025 Samyak Sanghvi. Built with curiosity, math, and a lot of computer graphics magic.</p>
+        </div>
+    </footer>
+</body>
+</html>
